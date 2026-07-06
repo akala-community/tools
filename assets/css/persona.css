@@ -163,7 +163,7 @@
   display: none !important;
 }
 
-.tool-persona .layout {
+.tool-persona .tool-layout {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 22px;
@@ -362,7 +362,7 @@
   color: #050505;
 }
 
-.tool-persona .nav-actions {
+.tool-persona .tool-nav-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -371,16 +371,16 @@
   flex-wrap: wrap;
 }
 
-.tool-persona .result {
+.tool-persona .tool-result {
   display: none;
   gap: 20px;
 }
 
-.tool-persona .result.active {
+.tool-persona .tool-result.active {
   display: grid;
 }
 
-.tool-persona .result-grid {
+.tool-persona .tool-result-grid {
   display: grid;
   grid-template-columns: 1.1fr .9fr;
   gap: 18px;
@@ -447,22 +447,22 @@
 }
 
 @media (max-width: 860px) {
-  .tool-persona .layout,
-  .tool-persona .result-grid {
+  .tool-persona .tool-layout,
+  .tool-persona .tool-result-grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 520px) {
-  .tool-persona .brand-mini span {
+  .tool-persona .tool-brand-copy {
     display: none;
   }
 
-  .tool-persona .top-actions {
+  .tool-persona .tool-actions {
     justify-content: flex-start;
   }
 
-  .tool-persona .eyebrow {
+  .tool-persona .tool-eyebrow {
     display: none;
   }
 
@@ -472,21 +472,21 @@
 }
 
 /* Former compatibility rules, kept here so Persona owns its app-specific layout. */
-.tool-persona .app {
+.tool-persona .tool-shell {
   width: 100% !important;
   max-width: none !important;
   padding: 0 !important;
   overflow: hidden;
 }
 
-.tool-persona .nav {
+.tool-persona .tool-topbar {
   position: sticky;
   top: 0;
   z-index: 20;
   margin-bottom: 0 !important;
 }
 
-.tool-persona .hero {
+.tool-persona .tool-hero {
   padding: 28px 22px !important;
 }
 
@@ -495,11 +495,8 @@
   margin-top: 18px !important;
 }
 
-.tool-persona .hero-logo {
-  display: none !important;
-}
 
-.tool-persona .layout,
+.tool-persona .tool-layout,
 .tool-persona .tool-layout {
   grid-template-columns: minmax(310px,378px) minmax(0,1fr) !important;
 }
@@ -509,7 +506,7 @@
   align-items: stretch !important;
 }
 
-.tool-persona .sidebar {
+.tool-persona .tool-sidebar {
   position: static !important;
 }
 
@@ -518,7 +515,7 @@
 }
 
 @media (max-width: 920px) {
-  .tool-persona .layout,
+  .tool-persona .tool-layout,
   .tool-persona .tool-layout {
     grid-template-columns: 1fr !important;
   }

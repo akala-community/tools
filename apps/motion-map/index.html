@@ -11,17 +11,17 @@
   <link rel="stylesheet" href="../../assets/css/motion-map.css" />
 </head>
 <body class="tool-page tool-motion">
-  <div class="app-shell tool-shell">
-    <header class="topbar tool-topbar">
-      <div class="app-row">
-        <div class="brand tool-brand">
-          <div class="mark tool-mark">M</div>
-          <div class="brand-copy tool-brand-copy">
+  <div class="tool-shell">
+    <header class="tool-topbar">
+      <div class="tool-topbar-row">
+        <div class="tool-brand">
+          <div class="tool-mark">M</div>
+          <div class="tool-brand-copy">
             <strong>AKALA Tools / MotionMap</strong>
             <span>Open-source diagram studio · local-first · export-ready</span>
           </div>
         </div>
-        <div class="actions tool-actions">
+        <div class="tool-actions">
           <a class="btn btn-secondary" href="../../index.html">Home</a>
           <button class="btn btn-secondary" id="saveLocalBtn" type="button">Save</button>
           <button class="btn btn-secondary" id="exportPngTop" type="button">PNG</button>
@@ -43,8 +43,8 @@
       </div>
     </section>
 
-    <main class="main tool-layout">
-      <aside class="sidebar tool-sidebar">
+    <main class="tool-layout">
+      <aside class="tool-sidebar">
         <div class="side-stack">
           <section class="card">
             <div class="section-head"><div class="section-title">1. Flow Definition</div><div class="help">?</div></div>
@@ -167,13 +167,13 @@ CRM -> Sales Team</textarea>
         </div>
       </aside>
 
-      <section class="workspace tool-workspace">
-        <div class="workspace-inner">
+      <section class="tool-workspace">
+        <div class="tool-workspace-inner">
           <div class="canvas-bar">
             <div class="crumb">Workspace · <strong>Preview Canvas</strong></div>
             <div class="zoom"><button id="zoomOutBtn" type="button">−</button><span id="zoomLabel">100%</span><button id="zoomInBtn" type="button">+</button><button id="zoomResetBtn" type="button">Fit</button></div>
           </div>
-          <div class="canvas-wrap"><svg id="diagramSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Animated diagram preview"></svg></div>
+          <div class="tool-canvas-wrap"><svg id="diagramSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Animated diagram preview"></svg></div>
           <div class="status tool-status-row">
             <div class="status-pills"><span class="tag-pill"><strong id="nodeCount">0</strong> nodes</span><span class="tag-pill"><strong id="edgeCount">0</strong> flows</span><span class="tag-pill">Layout <strong id="directionPill">Horizontal</strong></span><span class="tag-pill">Speed <strong id="speedPill">Normal</strong></span><span class="tag-pill">Circles <strong id="circleCountPill">2</strong></span></div>
             <div>MotionMap · pulsing multi-dot flow · color picker enabled</div>
