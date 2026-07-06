@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Open-source, browser-only tools for people building agents, prompts, and product flows.">
+  <title>AKALA Tools — Open-source browser tools for agent builders</title>
+  <link rel="stylesheet" href="./assets/css/tokens.css">
+  <link rel="stylesheet" href="./assets/css/base.css">
+  <link rel="stylesheet" href="./assets/css/components.css">
+  <link rel="stylesheet" href="./assets/css/gallery.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="AKALA Tools home">
+        <span class="brand-mark">A</span>
+        <span class="brand-copy">
+          <strong>AKALA Tools</strong>
+          <span>Open-source agent utilities</span>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a class="btn btn-ghost" href="#tools">Tools</a>
+        <a class="btn btn-ghost" href="#principles">Principles</a>
+        <a class="btn btn-secondary" href="./README.md">Docs</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="card hero-copy">
+          <span class="eyebrow">Local-first tools for agent builders</span>
+          <h1>Open-source utilities with product-grade polish.</h1>
+          <p>Prompt builders, diagram studios, schema helpers, and review utilities. Fast static tools, refined UI, useful exports, zero account wall.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#tools">Browse tools</a>
+            <a class="btn btn-secondary" href="./agent-persona.html">Open Persona Builder</a>
+          </div>
+        </div>
+
+        <aside class="card hero-panel" aria-label="Current tools">
+          <h2 class="panel-title">Production-ready base</h2>
+          <div class="mini-stack">
+            <a class="mini-tool" href="./agent-persona.html">
+              <strong>Agent Persona Builder</strong>
+              <span>Guided system prompt generation with bilingual output.</span>
+            </a>
+            <a class="mini-tool" href="./motion-map.html">
+              <strong>MotionMap</strong>
+              <span>Animated flow diagrams with PNG, SVG, and video export.</span>
+            </a>
+            <div class="mini-tool">
+              <strong>Next: Prompt Diff</strong>
+              <span>Prompt version comparison for safer iteration.</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="tools" aria-labelledby="tools-title">
+        <div class="section-head">
+          <div>
+            <h2 id="tools-title">Tools</h2>
+            <p>Purpose-built utilities with obvious starts, strong defaults, local state, and export paths that feel native.</p>
+          </div>
+        </div>
+        <div class="tool-grid" data-tool-grid></div>
+      </section>
+
+      <section id="principles" aria-labelledby="principles-title">
+        <div class="section-head">
+          <div>
+            <h2 id="principles-title">Design principles</h2>
+            <p>A shared light UI system keeps every tool consistent without making them feel generic.</p>
+          </div>
+        </div>
+        <div class="principles">
+          <article class="card principle">
+            <h3>Immediate value</h3>
+            <p>Every tool starts with examples, clear hierarchy, and one primary action.</p>
+          </article>
+          <article class="card principle">
+            <h3>Trust through locality</h3>
+            <p>Inputs stay in the browser. State uses localStorage. Exports use native browser APIs.</p>
+          </article>
+          <article class="card principle">
+            <h3>Quietly premium</h3>
+            <p>Warm neutrals, crisp spacing, high contrast text, and restrained motion.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>AKALA Tools · Open-source browser utilities</span>
+      <span id="roadmap">Roadmap: Prompt Diff · Schema Builder · Eval Sheet</span>
+    </footer>
+  </div>
+
+  <script type="module" src="./assets/js/ui/tool-registry.js"></script>
+</body>
+</html>
