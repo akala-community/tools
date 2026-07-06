@@ -77,7 +77,10 @@ Minimum requirements:
 ## Code style
 
 - prefer vanilla JavaScript
-- reuse `assets/js/core/*` helpers for DOM, toast, storage, download, and clipboard work
+- put tool behavior in `assets/js/apps/[tool-id].js`
+- keep tool HTML focused on document structure
+- keep shared shell styles in `assets/css/tools.css`
+- keep app-only styles in `assets/css/[tool-id].css`
 - keep functions small and named by behavior
 - avoid dependencies unless they remove significant complexity
 - avoid framework-specific patterns for static tools
@@ -93,6 +96,7 @@ Before opening a PR:
 
 - [ ] tool opens directly as a static HTML file
 - [ ] `index.html` links to the tool
+- [ ] `node scripts/check-site.mjs` passes
 - [ ] no console errors on load
 - [ ] no personal/private URLs in metadata or footer
 - [ ] mobile layout is usable

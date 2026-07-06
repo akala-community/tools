@@ -44,18 +44,23 @@ assets/
     base.css
     components.css
     gallery.css
-    tool.css
+    tools.css
+    persona.css
+    motion-map.css
+    tool.css              # legacy compatibility shim
+    tool-persona.css      # legacy compatibility shim
+    tool-motion.css       # legacy compatibility shim
   js/
-    core/
-      dom.js
-      toast.js
-      storage.js
-      download.js
-      clipboard.js
+    apps/
+      persona.js
+      motion-map.js
     ui/
       tool-registry.js
 docs/
   design-system.md
+scripts/
+  check-site.mjs
+```
 
 Each tool is registered in `assets/js/ui/tool-registry.js` with standardized metadata:
 
@@ -75,16 +80,6 @@ Each tool is registered in `assets/js/ui/tool-registry.js` with standardized met
   exports
 }
 ```
-```
-
-Recommended next split:
-
-```txt
-assets/js/tools/
-  agent-persona.js
-  agent-persona-data.js
-  motion-map.js
-```
 
 ## Local use
 
@@ -99,6 +94,24 @@ Then visit:
 ```txt
 http://localhost:8080
 ```
+
+## Checks
+
+Run the static site checks before committing UI changes:
+
+```bash
+node scripts/check-site.mjs
+```
+
+The check verifies:
+
+- no inline `<style>` blocks
+- no inline `style=` attributes
+- all buttons have explicit `type`
+- tool CSS load order
+- no legacy shell classes in tool pages
+- CSS brace balance
+- app CSS avoids `:root` and global `body` selectors
 
 ## Contributing
 

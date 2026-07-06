@@ -12,7 +12,7 @@
 .tool-persona .lang-toggle {
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: #fff;
+  background: var(--paper);
   box-shadow: 0 8px 28px rgba(0,0,0,.04);
 }
 
@@ -41,7 +41,7 @@
 
 .tool-persona .lang-btn.active {
   background: var(--ink);
-  color: #fff;
+  color: var(--paper);
 }
 
 .tool-persona .hero-footer {
@@ -76,10 +76,10 @@
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 9px 12px;
-  background: #fff;
+  background: var(--paper);
   font-size: 13px;
   font-weight: 800;
-  color: #343430;
+  color: var(--ink-soft);
 }
 
 .tool-persona .setup-card,
@@ -126,7 +126,7 @@
 .tool-persona input,
 .tool-persona textarea {
   width: 100%;
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 16px;
   color: var(--ink);
@@ -216,7 +216,7 @@
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: #fff;
+  background: var(--paper);
 }
 
 .tool-persona .quiz-meta strong,
@@ -247,7 +247,7 @@
 }
 
 .tool-persona .progress-dot.on {
-  background: #050505;
+  background: var(--ink);
 }
 
 .tool-persona .progress-meta {
@@ -303,7 +303,7 @@
 .tool-persona .tag {
   justify-self: start;
   color: var(--muted);
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 8px 12px;
@@ -317,7 +317,7 @@
 }
 
 .tool-persona .option {
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 20px;
   padding: 18px 18px 18px 58px;
@@ -335,9 +335,9 @@
 }
 
 .tool-persona .option.selected {
-  background: #050505;
-  color: #fff;
-  border-color: #050505;
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
   box-shadow: 0 18px 44px rgba(0,0,0,.15);
 }
 
@@ -358,8 +358,8 @@
 }
 
 .tool-persona .option.selected::before {
-  background: #fff;
-  color: #050505;
+  background: var(--paper);
+  color: var(--ink);
 }
 
 .tool-persona .tool-nav-actions {
@@ -511,7 +511,7 @@
 }
 
 .tool-persona .maker-footer {
-  color: #756d62;
+  color: var(--muted);
 }
 
 @media (max-width: 920px) {

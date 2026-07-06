@@ -1,0 +1,702 @@
+const STORAGE_KEY = 'motionmap_production_layout_v2';
+    const $ = (id) => document.getElementById(id);
+
+    const input = $('diagramInput');
+    const svg = $('diagramSvg');
+    const titleInput = $('titleInput');
+    const subtitleInput = $('subtitleInput');
+    const footerInput = $('footerInput');
+    const layoutMode = $('layoutMode');
+    const animationSpeed = $('animationSpeed');
+    const circleCount = $('circleCount');
+    const showNodeNumbers = $('showNodeNumbers');
+    const speedValue = $('speedValue');
+    const circleCountValue = $('circleCountValue');
+    const videoDuration = $('videoDuration');
+    const videoDurationValue = $('videoDurationValue');
+    const videoStatus = $('videoStatus');
+    const colorInputs = { page: $('colorPage'), card: $('colorCard'), text: $('colorText'), line: $('colorLine'), dot: $('colorDot'), muted: $('colorMuted') };
+    const charCount = $('charCount');
+    const errorBox = $('errorBox');
+    const nodeCountEl = $('nodeCount');
+    const edgeCountEl = $('edgeCount');
+    const layoutLabel = $('layoutLabel');
+    const directionPill = $('directionPill');
+    const speedPill = $('speedPill');
+    const circleCountPill = $('circleCountPill');
+    const zoomLabel = $('zoomLabel');
+    const canvasWrap = document.querySelector('.canvas-wrap');
+    const presetTiles = [...document.querySelectorAll('[data-preset]')];
+    const themeTiles = [...document.querySelectorAll('[data-theme]')];
+
+    let currentPreset = '1600x900';
+    let currentTheme = 'light';
+    let currentZoom = 1;
+    let lastRenderData = null;
+
+    const examples = {
+      sales: { title: 'Lead to Loyalty', subtitle: 'AUTOMATE. ENGAGE. GROW.', preset: '1600x900', theme: 'light', mode: 'auto', text: 'Lead -> WhatsApp -> AI Agent -> CRM\nAI Agent -> Knowledge Base\nCRM -> Sales Team' },
+      support: { title: 'Support, Routed Smartly', subtitle: 'TRIAGE. ESCALATE. IMPROVE.', preset: '1600x900', theme: 'neutral', mode: 'auto', text: 'Customer -> WhatsApp -> AI Agent\nAI Agent -> Knowledge Base\nAI Agent -> Support Ticket -> Human Team\nHuman Team -> Knowledge Base' },
+      rag: { title: 'RAG Answer Pipeline', subtitle: 'RETRIEVE. REASON. RESPOND.', preset: '1920x1080', theme: 'minimal', mode: 'auto', text: 'User Question -> Chat Interface -> AI Agent\nAI Agent -> Retriever -> Vector Database\nVector Database -> Relevant Docs -> AI Agent\nAI Agent -> Final Answer -> User' },
+      invoice: { title: 'Invoice Flow', subtitle: 'PARSE. VERIFY. PROCESS.', preset: '1080x1440', theme: 'dark', mode: 'auto', text: 'Email Inbox -> Invoice Parser -> Validation\nValidation -> Accounting System\nValidation -> Human Review\nHuman Review -> Accounting System\nAccounting System -> Payment Reminder' },
+      complex: { title: 'AI Operations Map', subtitle: 'CAPTURE. CLASSIFY. ROUTE. LEARN.', preset: '1080x1920', theme: 'light', mode: 'auto', text: 'Inbound Request -> Classifier -> Sales Lead -> CRM\nClassifier -> Support Case -> Ticket Queue -> Human Review\nClassifier -> Knowledge Question -> AI Agent -> Knowledge Base\nHuman Review -> Knowledge Base\nCRM -> Follow Up Reminder\nTicket Queue -> SLA Dashboard' }
+    };
+
+    const themes = {
+      light: palette('#f4f4f1', '#0e0e0e', '#ffffff', '#fbfbfa', '#666666', 'rgba(0,0,0,.13)', 'rgba(0,0,0,.36)'),
+      neutral: palette('#ededeb', '#111111', '#fdfdfc', '#f5f5f3', '#626262', 'rgba(0,0,0,.12)', 'rgba(0,0,0,.42)'),
+      minimal: palette('#ffffff', '#000000', '#ffffff', '#ffffff', '#575757', 'rgba(0,0,0,.09)', 'rgba(0,0,0,.28)'),
+      dark: {
+        page: '#111111', grid: '#2a2a2a', title: '#f7f7f5', subtitle: '#c9c9c9', rule: '#e8e8e8', card: '#181818', cardAlt: '#202020', cardStroke: 'rgba(255,255,255,.14)', shadow: 'rgba(0,0,0,.32)', iconBg: '#f4f4f1', iconFg: '#111111', line: '#f1f1ef', lineSoft: 'rgba(255,255,255,.24)', dot: '#ffffff', dotSoft: 'rgba(255,255,255,.15)', label: '#f7f7f5', body: '#bbbbbb', stepBg: '#f5f5f2', stepFg: '#111111', calloutBg: '#171717', calloutText: '#f3f3f0', calloutStroke: 'rgba(255,255,255,.18)', footer: '#a8a8a8', toolbarBg: '#f5f5f2', toolbarFg: '#111111'
+      }
+    };
+
+    function palette(page, ink, card, alt, muted, shadow, dashed) {
+      return { page, grid: '#d8d8d4', title: ink, subtitle: '#313131', rule: '#1b1b1b', card, cardAlt: alt, cardStroke: 'rgba(0,0,0,.15)', shadow, iconBg: '#111111', iconFg: '#ffffff', line: '#111111', lineSoft: 'rgba(0,0,0,.24)', dot: '#111111', dotSoft: 'rgba(0,0,0,.08)', label: ink, body: muted, stepBg: '#111111', stepFg: '#ffffff', calloutBg: alt, calloutText: '#222222', calloutStroke: 'rgba(0,0,0,.22)', footer: muted, toolbarBg: '#111111', toolbarFg: '#ffffff', dashed };
+    }
+
+
+    function hexToRgb(hex) {
+      const value = (hex || '#000000').replace('#', '');
+      const bigint = parseInt(value.length === 3 ? value.split('').map(c => c + c).join('') : value, 16);
+      return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+    }
+
+    function rgba(hex, alpha) {
+      const { r, g, b } = hexToRgb(hex);
+      return `rgba(${r},${g},${b},${alpha})`;
+    }
+
+    function readableOn(hex) {
+      const { r, g, b } = hexToRgb(hex);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
+      return luminance > 150 ? '#0e0e0e' : '#ffffff';
+    }
+
+    function getCustomColors() {
+      return {
+        page: colorInputs.page.value,
+        card: colorInputs.card.value,
+        text: colorInputs.text.value,
+        line: colorInputs.line.value,
+        dot: colorInputs.dot.value,
+        muted: colorInputs.muted.value
+      };
+    }
+
+    function applyColorsToTheme(baseTheme) {
+      const c = getCustomColors();
+      const onCard = readableOn(c.card);
+      return {
+        ...baseTheme,
+        page: c.page,
+        grid: rgba(c.text, 0.12),
+        title: c.text,
+        subtitle: c.muted,
+        rule: c.line,
+        card: c.card,
+        cardAlt: c.card,
+        cardStroke: rgba(c.text, 0.16),
+        shadow: rgba('#000000', 0.12),
+        line: c.line,
+        lineSoft: rgba(c.line, 0.34),
+        dot: c.dot,
+        dotSoft: rgba(c.dot, 0.13),
+        label: onCard,
+        body: c.muted,
+        stepBg: c.text,
+        stepFg: readableOn(c.text),
+        calloutBg: c.card,
+        calloutText: onCard,
+        calloutStroke: rgba(c.text, 0.18),
+        footer: c.muted,
+        dashed: rgba(c.line, 0.48)
+      };
+    }
+
+    function setColorInputsFromTheme(theme) {
+      colorInputs.page.value = normalizeHex(theme.page);
+      colorInputs.card.value = normalizeHex(theme.card);
+      colorInputs.text.value = normalizeHex(theme.title);
+      colorInputs.line.value = normalizeHex(theme.line);
+      colorInputs.dot.value = normalizeHex(theme.dot);
+      colorInputs.muted.value = normalizeHex(theme.body || theme.footer || '#666666');
+    }
+
+    function normalizeHex(value) {
+      if (/^#[0-9a-f]{6}$/i.test(value)) return value;
+      return '#666666';
+    }
+
+    function normalizeId(label) {
+      return label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') || ('node_' + Math.random().toString(36).slice(2, 8));
+    }
+
+    function cleanStep(step) {
+      return step.replace(/^\s*[-*•]?\s*/, '').replace(/^\s*\d+[.)]\s*/, '').trim();
+    }
+
+    function parseDiagram(text) {
+      const nodesByLabel = new Map();
+      const edges = [];
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+      const sequential = [];
+
+      function getNode(raw) {
+        const label = cleanStep(raw);
+        if (!label) return null;
+        const key = label.toLowerCase();
+        if (!nodesByLabel.has(key)) nodesByLabel.set(key, { id: normalizeId(label), label });
+        return nodesByLabel.get(key);
+      }
+
+      for (const line of lines) {
+        if (line.includes('->')) {
+          const parts = line.split('->').map(cleanStep).filter(Boolean);
+          for (let i = 0; i < parts.length - 1; i++) {
+            const from = getNode(parts[i]);
+            const to = getNode(parts[i + 1]);
+            if (from && to) edges.push({ from: from.id, to: to.id });
+          }
+        } else {
+          const item = cleanStep(line);
+          if (item) sequential.push(item);
+        }
+      }
+
+      if (edges.length === 0 && sequential.length > 1) {
+        for (let i = 0; i < sequential.length - 1; i++) {
+          const from = getNode(sequential[i]);
+          const to = getNode(sequential[i + 1]);
+          if (from && to) edges.push({ from: from.id, to: to.id });
+        }
+      } else {
+        sequential.forEach(getNode);
+      }
+
+      const seen = new Set();
+      const uniqueEdges = [];
+      for (const edge of edges) {
+        const key = `${edge.from}->${edge.to}`;
+        if (!seen.has(key) && edge.from !== edge.to) { seen.add(key); uniqueEdges.push(edge); }
+      }
+
+      const nodes = [...nodesByLabel.values()];
+      if (nodes.length < 2 || uniqueEdges.length < 1) throw new Error('Add at least one valid flow, for example: Lead -> WhatsApp -> AI Agent');
+      return { nodes, edges: uniqueEdges };
+    }
+
+    function computeLevels(graph) {
+      const nodeMap = new Map(graph.nodes.map(n => [n.id, { ...n, incoming: 0, outgoing: 0 }]));
+      graph.edges.forEach(e => {
+        if (nodeMap.has(e.to)) nodeMap.get(e.to).incoming += 1;
+        if (nodeMap.has(e.from)) nodeMap.get(e.from).outgoing += 1;
+      });
+      const memo = new Map();
+      const visiting = new Set();
+      const incomingByNode = new Map(graph.nodes.map(n => [n.id, []]));
+      graph.edges.forEach(e => incomingByNode.get(e.to)?.push(e.from));
+
+      function levelOf(id) {
+        if (memo.has(id)) return memo.get(id);
+        if (visiting.has(id)) return 0;
+        visiting.add(id);
+        const incoming = incomingByNode.get(id) || [];
+        const level = incoming.length ? Math.max(...incoming.map(from => levelOf(from) + 1)) : 0;
+        visiting.delete(id);
+        memo.set(id, level);
+        return level;
+      }
+      graph.nodes.forEach(n => levelOf(n.id));
+      return { nodeMap, levels: memo };
+    }
+
+    function chooseDirection(width, height) {
+      if (layoutMode.value !== 'auto') return layoutMode.value;
+      if (height / width >= 1.12) return 'vertical';
+      return 'horizontal';
+    }
+
+    function clamp(min, value, max) { return Math.max(min, Math.min(value, max)); }
+
+    function layoutGraph(graph, width, height, direction, showNumbers = true) {
+      const { nodeMap, levels } = computeLevels(graph);
+      const groups = new Map();
+      for (const node of graph.nodes) {
+        const level = levels.get(node.id) || 0;
+        if (!groups.has(level)) groups.set(level, []);
+        groups.get(level).push(nodeMap.get(node.id));
+      }
+
+      const sortedLevels = [...groups.keys()].sort((a,b) => a-b);
+      const levelCount = sortedLevels.length;
+      const maxGroupSize = Math.max(...sortedLevels.map(level => groups.get(level).length));
+      const safe = getSafeArea(width, height, direction);
+      const availableW = safe.right - safe.left;
+      const availableH = safe.bottom - safe.top;
+
+      let nodeW, nodeH;
+      if (direction === 'horizontal') {
+        nodeW = clamp(118, Math.min(210, (availableW / Math.max(levelCount, 1)) * .68, (availableW / Math.max(maxGroupSize, 1)) * .92), 220);
+        const fullNodeH = clamp(92, Math.min(158, (availableH / Math.max(maxGroupSize, 1)) * .68), 170);
+        nodeH = showNumbers ? fullNodeH : clamp(64, fullNodeH * .68, 118);
+        sortedLevels.forEach((level, levelIndex) => {
+          const items = groups.get(level);
+          const x = levelCount === 1 ? width / 2 : safe.left + (availableW * levelIndex / (levelCount - 1));
+          const gap = availableH / (items.length + 1);
+          items.forEach((node, itemIndex) => assignBox(node, x, safe.top + gap * (itemIndex + 1), nodeW, nodeH, showNumbers));
+        });
+      } else {
+        nodeW = clamp(132, Math.min(230, (availableW / Math.max(maxGroupSize, 1)) * .74), 240);
+        const fullNodeH = clamp(84, Math.min(148, (availableH / Math.max(levelCount, 1)) * .62), 160);
+        nodeH = showNumbers ? fullNodeH : clamp(58, fullNodeH * .66, 108);
+        sortedLevels.forEach((level, levelIndex) => {
+          const items = groups.get(level);
+          const y = levelCount === 1 ? (safe.top + safe.bottom) / 2 : safe.top + (availableH * levelIndex / (levelCount - 1));
+          const gap = availableW / (items.length + 1);
+          items.forEach((node, itemIndex) => assignBox(node, safe.left + gap * (itemIndex + 1), y, nodeW, nodeH, showNumbers));
+        });
+      }
+
+      preventEdgeClipping(nodeMap, safe, direction);
+      return { nodes: [...nodeMap.values()], edges: graph.edges, nodeMap, direction, safe, levelCount, maxGroupSize };
+    }
+
+    function assignBox(node, x, y, w, h, showNumbers = true) {
+      node.x = x; node.y = y; node.w = w; node.h = h;
+      node.fontTitle = showNumbers
+        ? clamp(11, Math.min(16, w * .075, h * .13), 17)
+        : clamp(12, Math.min(18, w * .082, h * .22), 20);
+    }
+
+    function getSafeArea(width, height, direction) {
+      const outerX = clamp(54, width * .075, 130);
+      const header = direction === 'vertical' ? clamp(170, height * .145, 260) : clamp(170, height * .20, 245);
+      const bottom = direction === 'vertical' ? clamp(180, height * .11, 260) : clamp(145, height * .16, 210);
+      return { left: outerX, right: width - outerX, top: header, bottom: height - bottom };
+    }
+
+    function preventEdgeClipping(nodeMap, safe, direction) {
+      for (const node of nodeMap.values()) {
+        node.x = clamp(safe.left + node.w / 2, node.x, safe.right - node.w / 2);
+        node.y = clamp(safe.top + node.h / 2, node.y, safe.bottom - node.h / 2);
+      }
+    }
+
+    function pathBetween(a, b, direction) {
+      if (direction === 'vertical') {
+        const sx = a.x, sy = a.y + a.h / 2;
+        const ex = b.x, ey = b.y - b.h / 2;
+        if (ey <= sy) {
+          const loopX = Math.min(Math.max(a.x, b.x) + a.w * .72, Math.max(a.x, b.x) + 140);
+          return `M ${a.x + a.w / 2} ${a.y} C ${loopX} ${a.y}, ${loopX} ${b.y}, ${b.x + b.w / 2} ${b.y}`;
+        }
+        const c1y = sy + Math.max(34, Math.abs(ey - sy) * .38);
+        const c2y = ey - Math.max(34, Math.abs(ey - sy) * .38);
+        return `M ${sx} ${sy} C ${sx} ${c1y}, ${ex} ${c2y}, ${ex} ${ey}`;
+      }
+
+      const sx = a.x + a.w / 2, sy = a.y;
+      const ex = b.x - b.w / 2, ey = b.y;
+      if (ex <= sx) {
+        const loopX = Math.min(Math.max(a.x, b.x) + a.w * .75, Math.max(a.x, b.x) + 160);
+        return `M ${a.x} ${a.y + a.h * .35} C ${loopX} ${a.y + a.h * .35}, ${loopX} ${b.y - b.h * .35}, ${b.x} ${b.y - b.h * .35}`;
+      }
+      const c1x = sx + Math.max(45, Math.abs(ex - sx) * .35);
+      const c2x = ex - Math.max(45, Math.abs(ex - sx) * .35);
+      return `M ${sx} ${sy} C ${c1x} ${sy}, ${c2x} ${ey}, ${ex} ${ey}`;
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+    }
+
+    function wrapText(text, maxChars, maxLines = 2) {
+      const words = String(text).split(/\s+/).filter(Boolean);
+      const lines = [];
+      let current = '';
+      for (const word of words) {
+        if ((current + ' ' + word).trim().length > maxChars && current) { lines.push(current); current = word; }
+        else current = (current + ' ' + word).trim();
+      }
+      if (current) lines.push(current);
+      if (lines.length > maxLines) {
+        const kept = lines.slice(0, maxLines);
+        kept[maxLines - 1] = kept[maxLines - 1].replace(/[.…]+$/, '') + '…';
+        return kept;
+      }
+      return lines;
+    }
+
+    function getPrimaryChain(graph) {
+      const incoming = new Map(graph.nodes.map(n => [n.id, 0]));
+      graph.edges.forEach(e => incoming.set(e.to, (incoming.get(e.to) || 0) + 1));
+      let current = graph.nodes.find(n => (incoming.get(n.id) || 0) === 0) || graph.nodes[0];
+      const visited = new Set(), chain = [];
+      while (current && !visited.has(current.id)) {
+        visited.add(current.id); chain.push(current.label);
+        const next = graph.edges.find(e => e.from === current.id && !visited.has(e.to));
+        current = next ? graph.nodes.find(n => n.id === next.to) : null;
+      }
+      return chain;
+    }
+
+    function render() {
+      updateUiLabels();
+      try {
+        errorBox.style.display = 'none';
+        const [width, height] = currentPreset.split('x').map(Number);
+        const graph = parseDiagram(input.value);
+        const direction = chooseDirection(width, height);
+        const layout = layoutGraph(graph, width, height, direction, showNodeNumbers.checked);
+        const theme = applyColorsToTheme(themes[currentTheme]);
+        const speed = Number(animationSpeed.value) || 5;
+        const duration = Math.max(0.9, 6.3 - speed * 0.52);
+        const pulseCount = clamp(1, Number(circleCount.value) || 2, 5);
+        const title = (titleInput.value || 'Untitled Flow').trim().toUpperCase();
+        const subtitle = (subtitleInput.value || '').trim().toUpperCase();
+        const footer = (footerInput.value || '').trim();
+
+        nodeCountEl.textContent = layout.nodes.length;
+        edgeCountEl.textContent = layout.edges.length;
+        directionPill.textContent = capitalize(direction);
+        layoutLabel.textContent = capitalize(direction);
+        speedPill.textContent = `${animationSpeed.value}/10`;
+        speedValue.textContent = animationSpeed.value;
+        circleCountValue.textContent = pulseCount;
+        circleCountPill.textContent = pulseCount;
+
+        svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+        svg.setAttribute('width', width);
+        svg.setAttribute('height', height);
+
+        const titleSize = direction === 'vertical' ? clamp(44, width * .085, 72) : clamp(44, width * .047, 78);
+        const titleY = direction === 'vertical' ? clamp(88, height * .07, 132) : clamp(80, height * .115, 112);
+        const subtitleY = titleY + clamp(36, titleSize * .72, 54);
+        const ruleWidth = direction === 'vertical' ? Math.min(110, width * .16) : Math.min(150, width * .095);
+        const defs = layout.edges.map((e, i) => `<path id="flowPath${i}" d="${pathBetween(layout.nodeMap.get(e.from), layout.nodeMap.get(e.to), direction)}" fill="none" />`).join('');
+
+        const edges = layout.edges.map((e, i) => {
+          const a = layout.nodeMap.get(e.from), b = layout.nodeMap.get(e.to);
+          const d = pathBetween(a, b, direction);
+          const backward = direction === 'vertical' ? (b.y - b.h/2 <= a.y + a.h/2) : (b.x - b.w/2 <= a.x + a.w/2);
+          const baseDelay = i * 0.18;
+          const pulses = Array.from({ length: pulseCount }, (_, pulseIndex) => {
+            const begin = (baseDelay + (duration / pulseCount) * pulseIndex).toFixed(2);
+            const outerR = clamp(8, Math.min(width, height) * .0085, 14);
+            const innerR = clamp(3.6, Math.min(width, height) * .0038, 5.8);
+            return `
+              <g class="flow-pulse" opacity="0.96">
+                <circle r="${innerR}" fill="${theme.dot}">
+                  <animate attributeName="r" values="${innerR};${outerR};${innerR}" dur="1.05s" repeatCount="indefinite" begin="${begin}s" />
+                  <animate attributeName="opacity" values="1;.34;1" dur="1.05s" repeatCount="indefinite" begin="${begin}s" />
+                  <animateMotion dur="${duration}s" repeatCount="indefinite" begin="${begin}s" rotate="auto"><mpath href="#flowPath${i}" /></animateMotion>
+                </circle>
+                <circle r="${outerR}" fill="none" stroke="${theme.dot}" stroke-width="1.8" opacity="0.28">
+                  <animate attributeName="r" values="${innerR};${outerR * 1.32};${innerR}" dur="1.05s" repeatCount="indefinite" begin="${begin}s" />
+                  <animate attributeName="opacity" values=".38;.04;.38" dur="1.05s" repeatCount="indefinite" begin="${begin}s" />
+                  <animateMotion dur="${duration}s" repeatCount="indefinite" begin="${begin}s" rotate="auto"><mpath href="#flowPath${i}" /></animateMotion>
+                </circle>
+              </g>`;
+          }).join('');
+          return `
+            <g>
+              <path d="${d}" fill="none" stroke="${backward ? theme.dashed : theme.lineSoft}" stroke-width="${Math.max(2.2, Math.min(4, width * .0022))}" stroke-linecap="round" ${backward ? 'stroke-dasharray="9 10"' : ''} marker-end="url(#arrow)" />
+              ${pulses}
+            </g>`;
+        }).join('');
+
+        const nodes = layout.nodes.map((n, i) => renderNode(n, i, theme, showNodeNumbers.checked)).join('');
+
+        svg.innerHTML = `
+          <defs>
+            <pattern id="dotGrid" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="${theme.grid}" /></pattern>
+            <filter id="shadowSoft" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="${theme.shadow}" /></filter>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="${theme.line}" opacity=".92" /></marker>
+            ${defs}
+          </defs>
+          <rect width="100%" height="100%" fill="${theme.page}" />
+          <rect width="100%" height="100%" fill="url(#dotGrid)" opacity="${currentTheme === 'dark' ? '.45' : '.74'}" />
+          <text x="${width/2}" y="${titleY}" text-anchor="middle" font-family="${fontSans()}" font-size="${titleSize}" font-weight="850" letter-spacing=".045em" fill="${theme.title}">${escapeHtml(title)}</text>
+          <text x="${width/2}" y="${subtitleY}" text-anchor="middle" font-family="${fontSans()}" font-size="${clamp(16, width * .014, 24)}" font-weight="600" letter-spacing=".14em" fill="${theme.subtitle}">${escapeHtml(subtitle)}</text>
+          <line x1="${width/2 - ruleWidth/2}" y1="${subtitleY + 27}" x2="${width/2 + ruleWidth/2}" y2="${subtitleY + 27}" stroke="${theme.rule}" stroke-width="2" opacity=".78" />
+          <g>${edges}</g>
+          <g>${nodes}</g>
+          <text x="${clamp(54, width * .06, 104)}" y="${height - clamp(34, height * .036, 58)}" font-family="${fontSans()}" font-size="${clamp(13, width * .012, 19)}" font-weight="620" fill="${theme.footer}">${escapeHtml(footer)}</text>
+        `;
+
+        lastRenderData = {
+          width,
+          height,
+          theme,
+          duration,
+          pulseCount,
+          dotColor: theme.dot,
+          edges: layout.edges.map((edge, index) => ({
+            id: `flowPath${index}`,
+            delay: index * 0.18,
+            innerR: clamp(3.6, Math.min(width, height) * .0038, 5.8),
+            outerR: clamp(8, Math.min(width, height) * .0085, 14)
+          }))
+        };
+        saveState();
+      } catch (err) {
+        errorBox.textContent = err.message;
+        errorBox.style.display = 'block';
+      }
+    }
+
+    function renderNode(n, index, theme, showNumbers) {
+      const labelLines = wrapText(n.label.toUpperCase(), Math.max(10, Math.floor(n.w / (n.fontTitle * .55))), 2);
+      const x = n.x - n.w / 2, y = n.y - n.h / 2;
+      const lineGap = n.fontTitle + 6;
+      const labelBlockHeight = (labelLines.length - 1) * lineGap;
+      const labelCenterY = showNumbers ? y + n.h * .43 : y + n.h * .55;
+      const firstLineY = labelCenterY - labelBlockHeight / 2 + n.fontTitle * .34;
+      const label = labelLines.map((line, i) => `<tspan x="${n.x}" y="${firstLineY + i * lineGap}">${escapeHtml(line)}</tspan>`).join('');
+      const stepW = clamp(38, n.w * .25, 54);
+      const stepH = clamp(18, n.h * .16, 24);
+      const numberBadge = showNumbers ? `
+          <rect x="${n.x - stepW/2}" y="${y + n.h - stepH - 12}" width="${stepW}" height="${stepH}" rx="${stepH/2}" fill="${theme.stepBg}" />
+          <text x="${n.x}" y="${y + n.h - 12 - stepH/2 + 4}" text-anchor="middle" font-family="${fontMono()}" font-size="${clamp(10, stepH * .54, 12)}" font-weight="780" fill="${theme.stepFg}">${String(index+1).padStart(2,'0')}</text>` : '';
+      return `
+        <g filter="url(#shadowSoft)">
+          <rect x="${x}" y="${y}" width="${n.w}" height="${n.h}" rx="${clamp(16, n.h * .18, 26)}" fill="${index % 2 ? theme.cardAlt : theme.card}" stroke="${theme.cardStroke}" stroke-width="2" />
+          <text text-anchor="middle" font-family="${fontSans()}" font-size="${n.fontTitle}" font-weight="850" letter-spacing=".075em" fill="${theme.label}">${label}</text>${numberBadge}
+        </g>`;
+    }
+
+
+    function serializeSvg() {
+      const clone = svg.cloneNode(true);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      return new XMLSerializer().serializeToString(clone);
+    }
+
+    function download(filename, href) {
+      const link = document.createElement('a');
+      link.href = href; link.download = filename; document.body.appendChild(link); link.click(); link.remove();
+    }
+
+    function exportSvg() {
+      const blob = new Blob([serializeSvg()], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      download('motionmap-diagram.svg', url);
+      setTimeout(() => URL.revokeObjectURL(url), 1200);
+    }
+
+    function exportPng() {
+      const [width, height] = currentPreset.split('x').map(Number);
+      const blob = new Blob([serializeSvg()], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        URL.revokeObjectURL(url);
+        download('motionmap-diagram.png', canvas.toDataURL('image/png'));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); alert('PNG export failed in this browser. Try SVG export.'); };
+      img.src = url;
+    }
+
+
+    function getBestVideoMimeType() {
+      if (!window.MediaRecorder || !MediaRecorder.isTypeSupported) return '';
+      const candidates = [
+        'video/mp4;codecs=avc1.42E01E',
+        'video/mp4;codecs=h264',
+        'video/mp4',
+        'video/webm;codecs=vp9',
+        'video/webm;codecs=vp8',
+        'video/webm'
+      ];
+      return candidates.find(type => MediaRecorder.isTypeSupported(type)) || '';
+    }
+
+    function serializeStaticSvgForVideo() {
+      const clone = svg.cloneNode(true);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.querySelectorAll('.flow-pulse').forEach(node => node.remove());
+      clone.querySelectorAll('animate, animateMotion, mpath').forEach(node => node.remove());
+      return new XMLSerializer().serializeToString(clone);
+    }
+
+    function loadImageFromSvgSource(source) {
+      return new Promise((resolve, reject) => {
+        const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Unable to prepare video frame image.')); };
+        img.src = url;
+      });
+    }
+
+    function capturePathMetrics() {
+      if (!lastRenderData) return [];
+      return lastRenderData.edges.map(edge => {
+        const path = document.getElementById(edge.id);
+        if (!path) return null;
+        return {
+          ...edge,
+          length: path.getTotalLength(),
+          getPoint: progress => path.getPointAtLength(progress * path.getTotalLength())
+        };
+      }).filter(Boolean);
+    }
+
+    function drawVideoPulses(ctx, paths, elapsed, renderDuration) {
+      const data = lastRenderData;
+      if (!data) return;
+      const cycle = data.duration;
+      paths.forEach(edge => {
+        for (let pulseIndex = 0; pulseIndex < data.pulseCount; pulseIndex++) {
+          const offset = edge.delay + (cycle / data.pulseCount) * pulseIndex;
+          const progress = (((elapsed - offset) % cycle) + cycle) % cycle / cycle;
+          const point = edge.getPoint(progress);
+          const pulsePhase = (((elapsed - offset) % 1.05) + 1.05) % 1.05 / 1.05;
+          const wave = Math.sin(pulsePhase * Math.PI);
+          const innerR = edge.innerR + (edge.outerR - edge.innerR) * wave;
+          const outerR = edge.outerR * (1 + 0.32 * wave);
+          ctx.save();
+          ctx.globalAlpha = 0.96 - 0.42 * wave;
+          ctx.fillStyle = data.dotColor;
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, innerR, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 0.32 * (1 - wave * 0.75);
+          ctx.strokeStyle = data.dotColor;
+          ctx.lineWidth = Math.max(1.5, Math.min(data.width, data.height) * 0.0018);
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, outerR, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+      });
+    }
+
+    async function exportVideo() {
+      if (!HTMLCanvasElement.prototype.captureStream || !window.MediaRecorder) {
+        alert('Video export is not supported in this browser. Try a recent Chrome, Edge, or Safari.');
+        return;
+      }
+      render();
+      const data = lastRenderData;
+      if (!data) return;
+      const mimeType = getBestVideoMimeType();
+      if (!mimeType) {
+        alert('This browser does not expose a supported MediaRecorder video format.');
+        return;
+      }
+
+      const exportSeconds = Number(videoDuration.value) || 6;
+      const fps = 30;
+      const canvas = document.createElement('canvas');
+      canvas.width = data.width;
+      canvas.height = data.height;
+      const ctx = canvas.getContext('2d');
+      const staticImage = await loadImageFromSvgSource(serializeStaticSvgForVideo());
+      const paths = capturePathMetrics();
+      const stream = canvas.captureStream(fps);
+      const chunks = [];
+      const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 8000000 });
+      const extension = mimeType.includes('mp4') ? 'mp4' : 'webm';
+
+      videoStatus.textContent = `Recording ${exportSeconds}s...`;
+      document.querySelectorAll('#exportVideoBtn, #exportVideoTop').forEach(btn => btn.disabled = true);
+
+      recorder.ondataavailable = event => { if (event.data && event.data.size) chunks.push(event.data); };
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        download(`motionmap-diagram.${extension}`, url);
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        videoStatus.textContent = extension === 'mp4' ? 'MP4 exported' : 'WebM exported';
+        document.querySelectorAll('#exportVideoBtn, #exportVideoTop').forEach(btn => btn.disabled = false);
+      };
+
+      recorder.start();
+      const totalFrames = Math.ceil(exportSeconds * fps);
+      for (let frame = 0; frame <= totalFrames; frame++) {
+        const elapsed = frame / fps;
+        ctx.clearRect(0, 0, data.width, data.height);
+        ctx.drawImage(staticImage, 0, 0, data.width, data.height);
+        drawVideoPulses(ctx, paths, elapsed, exportSeconds);
+        await new Promise(resolve => setTimeout(resolve, 1000 / fps));
+      }
+      recorder.stop();
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ input: input.value, title: titleInput.value, subtitle: subtitleInput.value, footer: footerInput.value, preset: currentPreset, theme: currentTheme, mode: layoutMode.value, speed: animationSpeed.value, circleCount: circleCount.value, showNumbers: showNodeNumbers.checked, videoDuration: videoDuration.value, colors: getCustomColors() }));
+    }
+
+    function loadState() {
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+        if (!data) return;
+        input.value = data.input ?? input.value;
+        titleInput.value = data.title ?? titleInput.value;
+        subtitleInput.value = data.subtitle ?? subtitleInput.value;
+        footerInput.value = data.footer ?? footerInput.value;
+        currentPreset = data.preset === '1080x1350' ? '1080x1440' : (data.preset ?? currentPreset);
+        currentTheme = data.theme ?? currentTheme;
+        layoutMode.value = data.mode ?? layoutMode.value;
+        animationSpeed.value = data.speed ?? animationSpeed.value;
+        circleCount.value = data.circleCount ?? circleCount.value;
+        showNodeNumbers.checked = data.showNumbers ?? showNodeNumbers.checked;
+        videoDuration.value = data.videoDuration ?? videoDuration.value;
+        if (data.colors) {
+          Object.entries(data.colors).forEach(([key, value]) => { if (colorInputs[key] && /^#[0-9a-f]{6}$/i.test(value)) colorInputs[key].value = value; });
+        }
+      } catch {}
+    }
+
+    function setPreset(value) { currentPreset = value; presetTiles.forEach(t => t.classList.toggle('active', t.dataset.preset === value)); render(); }
+    function setTheme(value, syncColors = true) { currentTheme = value; themeTiles.forEach(t => t.classList.toggle('active', t.dataset.theme === value)); if (syncColors) setColorInputsFromTheme(themes[value]); render(); }
+    function setZoom(value) { currentZoom = clamp(.55, value, 1.8); canvasWrap.style.transform = `scale(${currentZoom})`; zoomLabel.textContent = `${Math.round(currentZoom * 100)}%`; }
+    function updateUiLabels() { charCount.textContent = `${input.value.length} / 500`; speedPill.textContent = `${animationSpeed.value}/10`; speedValue.textContent = animationSpeed.value; circleCountValue.textContent = circleCount.value; circleCountPill.textContent = circleCount.value; videoDurationValue.textContent = `${videoDuration.value}s`; }
+    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+    function fontSans() { return 'Inter, Arial, Helvetica, sans-serif'; }
+    function fontMono() { return 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace'; }
+
+    presetTiles.forEach(btn => btn.addEventListener('click', () => setPreset(btn.dataset.preset)));
+    themeTiles.forEach(btn => btn.addEventListener('click', () => setTheme(btn.dataset.theme)));
+    document.querySelectorAll('[data-example]').forEach(btn => btn.addEventListener('click', () => {
+      const item = examples[btn.dataset.example];
+      titleInput.value = item.title; subtitleInput.value = item.subtitle; input.value = item.text;
+      layoutMode.value = item.mode; animationSpeed.value = item.speed || '5'; setPreset(item.preset); setTheme(item.theme); render();
+    }));
+    [input, titleInput, subtitleInput, footerInput, layoutMode, animationSpeed, circleCount, videoDuration, showNodeNumbers, ...Object.values(colorInputs)].forEach(el => el.addEventListener('input', render));
+    showNodeNumbers.addEventListener('change', render);
+    $('renderBtn').addEventListener('click', render);
+    $('saveLocalBtn').addEventListener('click', saveState);
+    $('exportPngBtn').addEventListener('click', exportPng);
+    $('exportSvgBtn').addEventListener('click', exportSvg);
+    $('exportVideoBtn').addEventListener('click', exportVideo);
+    $('exportPngTop').addEventListener('click', exportPng);
+    $('exportSvgTop').addEventListener('click', exportSvg);
+    $('exportVideoTop').addEventListener('click', exportVideo);
+    $('zoomInBtn').addEventListener('click', () => setZoom(currentZoom + .1));
+    $('zoomOutBtn').addEventListener('click', () => setZoom(currentZoom - .1));
+    $('zoomResetBtn').addEventListener('click', () => setZoom(1));
+    $('resetColorsBtn').addEventListener('click', () => setTheme(currentTheme, true));
+    $('invertColorsBtn').addEventListener('click', () => {
+      const oldPage = colorInputs.page.value;
+      const oldText = colorInputs.text.value;
+      colorInputs.page.value = oldText;
+      colorInputs.text.value = oldPage;
+      colorInputs.card.value = oldText;
+      colorInputs.muted.value = readableOn(oldText) === '#ffffff' ? '#cfcfcf' : '#555555';
+      render();
+    });
+
+    loadState();
+    setPreset(currentPreset);
+    setTheme(currentTheme, false);
+    setZoom(1);
+    updateUiLabels();
+    render();
