@@ -13,15 +13,17 @@ Open-source, browser-only tools for people building agents, prompts, and product
 
 ## Design direction
 
-The collection uses a shared UI system:
+The collection uses a shared light UI system:
 
-- dark premium gallery shell
+- warm off-white canvas
 - light card-based builder flows
-- dark workspace shell for studios
+- light studio shell for workspaces
 - large rounded cards
 - clear primary actions
 - local-first save/export behavior
 - no login or backend requirement
+
+See [`docs/design-system.md`](./docs/design-system.md).
 
 ## Architecture
 
@@ -32,6 +34,8 @@ index.html
 agent-persona.html
 motion-map.html
 assets/
+  brand/
+    akala-mark.svg
   css/
     tokens.css
     base.css
@@ -40,6 +44,8 @@ assets/
   js/
     ui/
       tool-registry.js
+docs/
+  design-system.md
 ```
 
 Recommended next split:
@@ -70,6 +76,10 @@ Then visit:
 ```txt
 http://localhost:8080
 ```
+
+## Contributing
+
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## Contribution principles
 
