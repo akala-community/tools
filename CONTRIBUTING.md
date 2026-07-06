@@ -55,6 +55,7 @@ Minimum requirements:
 ## Code style
 
 - prefer vanilla JavaScript
+- reuse `assets/js/core/*` helpers for DOM, toast, storage, download, and clipboard work
 - keep functions small and named by behavior
 - avoid dependencies unless they remove significant complexity
 - avoid framework-specific patterns for static tools

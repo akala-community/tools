@@ -42,6 +42,12 @@ assets/
     components.css
     gallery.css
   js/
+    core/
+      dom.js
+      toast.js
+      storage.js
+      download.js
+      clipboard.js
     ui/
       tool-registry.js
 docs/
@@ -51,12 +57,6 @@ docs/
 Recommended next split:
 
 ```txt
-assets/js/core/
-  dom.js
-  toast.js
-  storage.js
-  download.js
-  clipboard.js
 assets/js/tools/
   agent-persona.js
   agent-persona-data.js
