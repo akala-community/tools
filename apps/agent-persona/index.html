@@ -9,11 +9,11 @@
   <meta name="author" content="AKALA Tools contributors" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="canonical" href="./agent-persona.html" />
+  <link rel="canonical" href="./" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Agent Persona Builder" />
   <meta property="og:description" content="Create a ready-to-use AI agent system prompt by choosing response examples you like." />
-  <meta property="og:url" content="./agent-persona.html" />
+  <meta property="og:url" content="./" />
   <meta property="og:site_name" content="AKALA Tools" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:locale:alternate" content="id_ID" />
@@ -39,24 +39,32 @@
     .result{display:none;gap:20px}.result.active{display:grid}.result-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.prompt-output{min-height:520px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;font-size:13px;white-space:pre-wrap}.maker-footer{margin-top:78px;padding:36px 0 8px;border-top:1px solid var(--line);text-align:center}.maker-link{display:inline-flex;align-items:center;justify-content:center;gap:12px;color:var(--ink);text-decoration:none;font-size:14px;font-weight:800;transition:.18s ease}.maker-link:hover{transform:translateY(-1px);opacity:.72}.maker-logo{width:34px;height:34px}.maker-subtitle{margin-top:8px;color:var(--muted);font-size:13px;line-height:1.5}.toast{position:fixed;right:24px;bottom:24px;background:var(--ink);color:white;border-radius:999px;padding:12px 16px;box-shadow:var(--shadow);display:none;font-weight:800}.toast.show{display:block}
     @media(max-width:860px){.layout,.result-grid{grid-template-columns:1fr}.sidebar{position:static}.nav{margin-bottom:24px}.hero{padding-top:10px}}@media(max-width:520px){.app{width:min(100% - 22px,1040px)}.nav{align-items:flex-start}.brand-mini span{display:none}.top-actions{justify-content:flex-start}.eyebrow{display:none}.hero-logo{width:78px;height:78px}.quiz-card{min-height:auto}}
   </style>
+  <link rel="stylesheet" href="../../assets/css/tool.css" />
 </head>
-<body>
-  <main class="app">
-    <header class="nav">
-      <div class="brand-mini"><svg class="brand-logo" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M32 6 54 18.5v25L32 56 10 43.5v-25L32 6Z" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><path d="M32 31 10 18.5M32 31l22-12.5M32 31v25" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 34.5c0-3.6 2.4-6 5.8-6h8.2v20.2l-7.1-4.6h-1.1c-3.4 0-5.8-2.3-5.8-5.7v-3.9Z" fill="currentColor"/><path d="M44 28.8c-2.5 0-4.6 2-4.6 4.6s2.1 4.6 4.6 4.6c1.8 0 3.4-1.1 4.1-2.6V45l-16.1 9V31l22-12.5v10.3h-9.9Z" fill="currentColor" opacity="0.08"/><path d="M21.5 35.5h.01M26.5 35.5h.01" stroke="white" stroke-width="3.5" stroke-linecap="round"/></svg><span>Agent Persona Builder</span></div>
-      <div class="top-actions"><a class="btn secondary" href="./index.html">Home</a><div class="version-badge" aria-label="Version">v1.3</div><div class="lang-toggle" aria-label="Language selector"><button class="lang-btn active" data-lang="en" type="button">EN</button><button class="lang-btn" data-lang="id" type="button">ID</button></div></div>
+<body class="tool-page tool-persona">
+  <main class="app tool-shell">
+    <header class="nav tool-topbar">
+      <div class="brand-mini"><svg class="brand-logo" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M32 6 54 18.5v25L32 56 10 43.5v-25L32 6Z" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><path d="M32 31 10 18.5M32 31l22-12.5M32 31v25" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 34.5c0-3.6 2.4-6 5.8-6h8.2v20.2l-7.1-4.6h-1.1c-3.4 0-5.8-2.3-5.8-5.7v-3.9Z" fill="currentColor"/><path d="M44 28.8c-2.5 0-4.6 2-4.6 4.6s2.1 4.6 4.6 4.6c1.8 0 3.4-1.1 4.1-2.6V45l-16.1 9V31l22-12.5v10.3h-9.9Z" fill="currentColor" opacity="0.08"/><path d="M21.5 35.5h.01M26.5 35.5h.01" stroke="white" stroke-width="3.5" stroke-linecap="round"/></svg><span>AKALA Tools / Agent Persona</span></div>
+      <div class="top-actions tool-actions"><a class="btn secondary" href="../../index.html">Home</a><div class="version-badge" aria-label="Version">v1.3</div><div class="lang-toggle" aria-label="Language selector"><button class="lang-btn active" data-lang="en" type="button">EN</button><button class="lang-btn" data-lang="id" type="button">ID</button></div></div>
     </header>
 
-    <section class="hero" id="topView">
-      <div class="hero-logo"><svg class="brand-logo" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M32 6 54 18.5v25L32 56 10 43.5v-25L32 6Z" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><path d="M32 31 10 18.5M32 31l22-12.5M32 31v25" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 34.5c0-3.6 2.4-6 5.8-6h8.2v20.2l-7.1-4.6h-1.1c-3.4 0-5.8-2.3-5.8-5.7v-3.9Z" fill="currentColor"/><path d="M44 28.8c-2.5 0-4.6 2-4.6 4.6s2.1 4.6 4.6 4.6c1.8 0 3.4-1.1 4.1-2.6V45l-16.1 9V31l22-12.5v10.3h-9.9Z" fill="currentColor" opacity="0.08"/><path d="M21.5 35.5h.01M26.5 35.5h.01" stroke="white" stroke-width="3.5" stroke-linecap="round"/></svg></div>
-      <div class="eyebrow" data-i18n="eyebrow">Persona Builder</div>
-      <h1 data-i18n="heroTitle">Design an AI that feels like you.</h1>
-      <p data-i18n="heroDesc">Name your agent, choose what it does, then pick the replies you prefer. We'll generate a system prompt that fits.</p>
-      <div class="hero-actions"><a class="btn" href="#setupView" data-i18n="startCta">Start with agent details →</a></div>
-      <div class="hero-footer"><span class="mini-pill" data-i18n="pill1">No prompt jargon</span><span class="mini-pill" data-i18n="pill2">Use-case specific questions</span><span class="mini-pill" data-i18n="pill3">Copy-ready system prompt</span></div>
+    <section class="hero tool-hero" id="topView">
+      <div>
+        <div class="eyebrow tool-eyebrow" data-i18n="eyebrow">Persona Builder</div>
+        <h1 data-i18n="heroTitle">Design an AI that feels like you.</h1>
+        <p data-i18n="heroDesc">Name your agent, choose what it does, then pick the replies you prefer. We'll generate a system prompt that fits.</p>
+        <div class="hero-footer"><span class="mini-pill" data-i18n="pill1">No prompt jargon</span><span class="mini-pill" data-i18n="pill2">Use-case specific questions</span><span class="mini-pill" data-i18n="pill3">Copy-ready system prompt</span></div>
+      </div>
+      <div class="hero-actions tool-actions"><a class="btn" href="#setupView" data-i18n="startCta">Start with agent details →</a></div>
     </section>
 
-    <section class="setup-card" id="setupView">
+    <section class="tool-layout" id="setupView">
+      <aside class="panel sidebar tool-sidebar">
+        <div class="section-head"><div class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></div><h2 class="section-title">Setup</h2></div>
+        <p class="small-note">Define the agent first. The quiz adapts to the type, language, and use case.</p>
+        <div class="trait-list"><span class="chip">Local only</span><span class="chip">Copy-ready</span><span class="chip">Guided flow</span></div>
+      </aside>
+      <section class="tool-workspace"><div class="setup-card">
       <h2 class="setup-title" data-i18n="setupTitle">First, define the agent.</h2>
       <p class="setup-desc" data-i18n="setupDesc">This makes the quiz more relevant. You can choose a common type or write your own.</p>
       <div class="field"><label for="agentLanguage" data-i18n="languageLabel">Agent language</label><select id="agentLanguage"></select><div class="helper" data-i18n="languageHelp">This controls the quiz language and the generated system prompt.</div></div>
@@ -64,10 +72,11 @@
       <div class="field"><label for="agentUseCase" data-i18n="typeLabel">Agent type</label><select id="agentUseCase"></select><div class="helper" data-i18n="typeHelp">Pick the closest type. The quiz will adapt to it.</div></div>
       <div class="custom-row hidden" id="customTypeRow"><div class="field"><label for="customType" data-i18n="customTypeLabel">Custom agent type</label><input id="customType" placeholder="e.g. HR onboarding assistant" /></div></div>
       <button class="btn full" id="beginBtn" type="button" data-i18n="beginBtn">Begin quiz →</button>
+      </div></section>
     </section>
 
-    <section class="layout hidden" id="quizView">
-      <aside class="panel sidebar">
+    <section class="layout tool-layout hidden" id="quizView">
+      <aside class="panel sidebar tool-sidebar">
         <div class="section-head"><div class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></div><h2 class="section-title" data-i18n="quizTitle">Your agent</h2></div>
         <div class="quiz-meta"><strong id="sidebarName">Persona Agent</strong><span id="sidebarType">General AI assistant</span><span id="sidebarLanguage">English</span></div>
         <button class="btn secondary full" id="editSetupBtn" type="button" data-i18n="editSetup">Edit details</button>
@@ -75,17 +84,17 @@
         <p class="small-note" data-i18n="sidebarNote">Pick the response that feels closest to your ideal agent. No wrong answers.</p>
         <div class="trait-list" id="traitPreview"></div>
       </aside>
-      <section><div class="quiz-card" id="questionCard"></div></section>
+      <section class="tool-workspace"><div class="quiz-card" id="questionCard"></div></section>
     </section>
 
-    <section class="result" id="resultView">
+    <section class="result tool-workspace" id="resultView">
       <div class="panel">
         <div class="section-head"><div class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15h6"/><path d="M9 11h2"/></svg></div><div><h2 class="section-title" data-i18n="resultTitle">Your agent prompt</h2><p class="small-note" data-i18n="resultDesc">Review, edit, then copy it into your agent builder.</p></div></div>
         <div class="result-grid"><div><div class="field"><label for="promptOutput" data-i18n="promptLabel">System prompt</label><textarea id="promptOutput" class="prompt-output"></textarea></div><div class="nav-actions"><button class="btn secondary" id="backToQuizBtn" data-i18n="backBtn">Back</button><div><button class="btn secondary" id="downloadBtn" data-i18n="downloadBtn">Download</button><button class="btn" id="copyBtn" data-i18n="copyBtn">Copy prompt</button></div></div></div><div><div class="section-head"><div class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v18M3 12h18"/></svg></div><h3 class="section-title" data-i18n="summaryTitle">Style summary</h3></div><div class="trait-list" id="resultTraits"></div><div class="field"><label data-i18n="styleLabel">Selected style</label><textarea id="explanationOutput" readonly></textarea></div></div></div>
       </div>
     </section>
 
-    <footer class="maker-footer"><a class="maker-link" href="./index.html" aria-label="Back to AKALA Tools"><svg class="maker-logo" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M32 6 54 18.5v25L32 56 10 43.5v-25L32 6Z" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><path d="M32 31 10 18.5M32 31l22-12.5M32 31v25" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 34.5c0-3.6 2.4-6 5.8-6h8.2v20.2l-7.1-4.6h-1.1c-3.4 0-5.8-2.3-5.8-5.7v-3.9Z" fill="currentColor"/><path d="M21.5 35.5h.01M26.5 35.5h.01" stroke="white" stroke-width="3.5" stroke-linecap="round"/></svg><span>Part of <strong>AKALA Tools</strong> ↗</span></a><div class="maker-subtitle">Open-source browser utilities • local-first • export-ready</div></footer>
+    <footer class="maker-footer"><a class="maker-link" href="../../index.html" aria-label="Back to AKALA Tools"><svg class="maker-logo" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M32 6 54 18.5v25L32 56 10 43.5v-25L32 6Z" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><path d="M32 31 10 18.5M32 31l22-12.5M32 31v25" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 34.5c0-3.6 2.4-6 5.8-6h8.2v20.2l-7.1-4.6h-1.1c-3.4 0-5.8-2.3-5.8-5.7v-3.9Z" fill="currentColor"/><path d="M21.5 35.5h.01M26.5 35.5h.01" stroke="white" stroke-width="3.5" stroke-linecap="round"/></svg><span>Part of <strong>AKALA Tools</strong> ↗</span></a><div class="maker-subtitle">Open-source browser utilities • local-first • export-ready</div></footer>
   </main>
   <div class="toast" id="toast"></div>
 

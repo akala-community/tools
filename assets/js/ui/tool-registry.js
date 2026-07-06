@@ -4,7 +4,7 @@ const tools = [
     name: 'Agent Persona Builder',
     icon: 'AP',
     description: 'Create system prompts from response preferences, agent type, and target language.',
-    href: './agent-persona.html',
+    href: './apps/agent-persona/',
     status: 'available',
     tags: ['prompt', 'agent', 'persona']
   },
@@ -13,7 +13,7 @@ const tools = [
     name: 'MotionMap',
     icon: 'MM',
     description: 'Turn simple arrow syntax into animated flow diagrams with PNG, SVG, and video export.',
-    href: './motion-map.html',
+    href: './apps/motion-map/',
     status: 'available',
     tags: ['diagram', 'svg', 'export']
   },

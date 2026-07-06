@@ -12,7 +12,10 @@ AKALA Tools uses a warm light UI system for small, browser-only utilities.
 
 ## Tokens
 
-Source: `assets/css/tokens.css`
+Sources:
+
+- `assets/css/tokens.css` for global gallery tokens
+- `assets/css/tool.css` for shared single-tool shell overrides
 
 Core colors:
 
@@ -31,6 +34,34 @@ Core colors:
 Use `--ink` for primary actions and main headings. Use `--gold` sparingly for accents, glows, and emphasis.
 
 ## Components
+
+### Tool shell
+
+Every single-file tool should load:
+
+```html
+<link rel="stylesheet" href="../../assets/css/tool.css" />
+```
+
+Use these body classes:
+
+```html
+<body class="tool-page tool-persona">
+<body class="tool-page tool-motion">
+```
+
+Use the shared shell pieces:
+
+```html
+<main class="tool-shell">
+<header class="tool-topbar">...</header>
+<section class="tool-hero">...</section>
+<section class="tool-layout">
+  <aside class="tool-sidebar">...</aside>
+  <section class="tool-workspace">...</section>
+</section>
+</main>
+```
 
 ### Shell
 

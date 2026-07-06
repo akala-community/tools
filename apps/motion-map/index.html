@@ -330,8 +330,8 @@
     .switch input:checked + .switch-track::after { background: #fffaf1; }
 
     @media (max-width: 1120px) {
-      body { padding: 10px; }
-      .app-shell { min-height: calc(100vh - 20px); }
+      body { padding: 12px; }
+      .app-shell { min-height: calc(100vh - 24px); }
       .main { grid-template-columns: 1fr; }
       .sidebar { border-right: 0; border-bottom: 1px solid var(--line); }
       #diagramSvg { width: 100%; }
@@ -347,38 +347,43 @@
       .exports, .grid-2 { grid-template-columns: 1fr; }
     }
   </style>
+  <link rel="stylesheet" href="../../assets/css/tool.css" />
 </head>
-<body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="browser-row">
-        <div class="traffic"><span></span><span></span><span></span></div>
-        <div class="tab"><div class="mark">M</div><strong>MotionMap</strong></div>
-        <button class="plus" type="button" aria-label="New tab">+</button>
-        <div class="address">motionmap.app</div>
-      </div>
+<body class="tool-page tool-motion">
+  <div class="app-shell tool-shell">
+    <header class="topbar tool-topbar">
       <div class="app-row">
-        <div class="brand">
-          <div class="mark">M</div>
-          <div class="brand-copy">
-            <strong>MotionMap</strong>
+        <div class="brand tool-brand">
+          <div class="mark tool-mark">M</div>
+          <div class="brand-copy tool-brand-copy">
+            <strong>AKALA Tools / MotionMap</strong>
             <span>Open-source diagram studio · local-first · export-ready</span>
           </div>
         </div>
-        <div class="actions">
-          <a class="chip" href="./index.html">Home</a>
-          <button class="chip" id="renderBtn" type="button">Render</button>
+        <div class="actions tool-actions">
+          <a class="chip" href="../../index.html">Home</a>
           <button class="chip" id="saveLocalBtn" type="button">Save</button>
-          <button class="chip" id="exportPngTop" type="button">Export PNG</button>
-          <button class="chip" id="exportVideoTop" type="button">Export Video</button>
+          <button class="chip" id="exportPngTop" type="button">PNG</button>
+          <button class="chip" id="exportVideoTop" type="button">Video</button>
           <button class="chip primary" id="exportSvgTop" type="button">Export SVG</button>
-          <div class="avatar">A</div>
         </div>
       </div>
     </header>
 
-    <main class="main">
-      <aside class="sidebar">
+    <section class="tool-hero">
+      <div>
+        <div class="tool-eyebrow">Diagram Studio</div>
+        <h1>Map agent flows from plain text.</h1>
+        <p>Create animated diagrams with PNG, SVG, and video export. Everything runs locally in your browser.</p>
+      </div>
+      <div class="tool-actions">
+        <button class="chip primary" id="renderBtn" type="button">Render diagram</button>
+        <button class="chip" type="button" data-example="sales">Use example</button>
+      </div>
+    </section>
+
+    <main class="main tool-layout">
+      <aside class="sidebar tool-sidebar">
         <div class="side-stack">
           <section class="card">
             <div class="section-head"><div class="section-title">1. Flow Definition</div><div class="help">?</div></div>
@@ -501,14 +506,14 @@ CRM -> Sales Team</textarea>
         </div>
       </aside>
 
-      <section class="workspace">
+      <section class="workspace tool-workspace">
         <div class="workspace-inner">
           <div class="canvas-bar">
             <div class="crumb">Workspace · <strong>Preview Canvas</strong></div>
             <div class="zoom"><button id="zoomOutBtn" type="button">−</button><span id="zoomLabel">100%</span><button id="zoomInBtn" type="button">+</button><button id="zoomResetBtn" type="button">Fit</button></div>
           </div>
           <div class="canvas-wrap"><svg id="diagramSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Animated diagram preview"></svg></div>
-          <div class="status">
+          <div class="status tool-status-row">
             <div class="status-pills"><span class="pill"><strong id="nodeCount">0</strong> nodes</span><span class="pill"><strong id="edgeCount">0</strong> flows</span><span class="pill">Layout <strong id="directionPill">Horizontal</strong></span><span class="pill">Speed <strong id="speedPill">Normal</strong></span><span class="pill">Circles <strong id="circleCountPill">2</strong></span></div>
             <div>MotionMap · pulsing multi-dot flow · color picker enabled</div>
           </div>

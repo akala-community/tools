@@ -1,0 +1,398 @@
+/* Shared AKALA tool shell. Loaded after each single-file tool's local styles. */
+.tool-page {
+  color-scheme: light;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(217,155,41,.18), transparent 28rem),
+    radial-gradient(circle at 88% 8%, rgba(49,95,159,.10), transparent 30rem),
+    linear-gradient(180deg,#fffaf1 0%,#f7f4ee 48%,#f4efe7 100%) !important;
+  color: #17130d;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+.tool-shell {
+  width: 100% !important;
+  min-height: calc(100vh - 24px) !important;
+  border: 1px solid #e4dccf !important;
+  border-radius: 24px !important;
+  background: rgba(255,255,255,.72) !important;
+  box-shadow: 0 24px 80px rgba(42,31,16,.12) !important;
+  backdrop-filter: blur(18px);
+}
+
+.tool-topbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+  min-height: 80px;
+  margin: 0 !important;
+  padding: 18px 22px !important;
+  border-bottom: 1px solid #e4dccf !important;
+  background: rgba(255,255,255,.72) !important;
+  backdrop-filter: blur(18px);
+}
+
+.tool-brand,
+.tool-page .brand,
+.tool-page .brand-mini {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-width: 0;
+  font-weight: 900;
+  letter-spacing: -.035em;
+}
+
+.tool-mark,
+.tool-page .mark,
+.tool-page .brand-mini svg {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border: 1px solid #d5cab9 !important;
+  border-radius: 15px !important;
+  background: linear-gradient(145deg,#17130d,#3a3025) !important;
+  color: #fffaf1 !important;
+  font-weight: 950;
+  letter-spacing: -.05em;
+  box-shadow: 0 14px 30px rgba(23,19,13,.16);
+}
+
+.tool-brand-copy {
+  min-width: 0;
+}
+
+.tool-brand-copy strong,
+.tool-page .brand-copy strong,
+.tool-page .brand-mini span {
+  display: block !important;
+  color: #17130d;
+  font-size: 16px;
+  letter-spacing: -.035em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tool-brand-copy span {
+  display: block;
+  margin-top: 2px;
+  color: #756d62;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tool-actions,
+.tool-page .actions,
+.tool-page .top-actions,
+.tool-page .hero-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  flex-wrap: wrap;
+  margin: 0 !important;
+}
+
+.tool-btn,
+.tool-page .chip,
+.tool-page .btn.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid #e4dccf !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.72) !important;
+  color: #17130d !important;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.82) !important;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+
+.tool-btn:hover,
+.tool-page .chip:hover,
+.tool-page .btn.secondary:hover {
+  transform: translateY(-1px);
+  border-color: #d5cab9 !important;
+  background: #fff !important;
+  box-shadow: 0 12px 28px rgba(42,31,16,.08) !important;
+}
+
+.tool-btn-primary,
+.tool-page .chip.primary,
+.tool-page .btn:not(.secondary) {
+  border-color: #17130d !important;
+  background: #17130d !important;
+  color: #fffaf1 !important;
+  box-shadow: 0 14px 30px rgba(23,19,13,.18) !important;
+}
+
+.tool-hero {
+  display: flex !important;
+  align-items: end !important;
+  justify-content: space-between !important;
+  gap: 20px !important;
+  padding: 28px 22px !important;
+  text-align: left !important;
+  border-bottom: 1px solid #e4dccf;
+}
+
+.tool-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: #8a620f;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.tool-eyebrow::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #d99b29;
+  box-shadow: 0 0 0 5px rgba(217,155,41,.15);
+}
+
+.tool-hero h1 {
+  margin: 0;
+  max-width: 720px;
+  color: #17130d;
+  font-size: clamp(34px,5vw,62px);
+  line-height: .95;
+  letter-spacing: -.065em;
+}
+
+.tool-hero p {
+  max-width: 560px !important;
+  margin: 14px 0 0 !important;
+  color: #756d62;
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+
+.tool-layout {
+  display: grid !important;
+  grid-template-columns: minmax(310px, 378px) minmax(0,1fr) !important;
+  min-height: 0;
+}
+
+.tool-sidebar {
+  min-height: 0;
+  overflow: auto;
+  padding: 18px !important;
+  border-right: 1px solid #e4dccf !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.56), rgba(255,250,241,.62)) !important;
+}
+
+.tool-workspace {
+  min-width: 0;
+  overflow: auto;
+  padding: 18px !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.52), rgba(255,250,241,.34)) !important;
+}
+
+.tool-page .setup-card {
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+.tool-page .quiz-card {
+  min-height: 540px;
+}
+
+.tool-page .result {
+  padding: 18px !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.52), rgba(255,250,241,.34)) !important;
+}
+
+.tool-page .result.active {
+  display: block !important;
+}
+
+.tool-page .card,
+.tool-page .panel,
+.tool-page .setup-card,
+.tool-page .quiz-card {
+  border: 1px solid #e4dccf !important;
+  border-radius: 22px !important;
+  background: rgba(255,255,255,.78) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.82), 0 12px 30px rgba(42,31,16,.055) !important;
+}
+
+.tool-page .section-title,
+.tool-page label,
+.tool-page .brand-copy strong {
+  color: #17130d !important;
+}
+
+.tool-page .small-note,
+.tool-page .field-foot,
+.tool-page .helper,
+.tool-page .tile-sub,
+.tool-page .brand-copy span {
+  color: #756d62 !important;
+}
+
+.tool-page input,
+.tool-page select,
+.tool-page textarea {
+  border-color: #e4dccf !important;
+  background: rgba(255,255,255,.86) !important;
+  color: #17130d !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.86);
+}
+
+.tool-page input:focus,
+.tool-page select:focus,
+.tool-page textarea:focus {
+  border-color: #d5cab9 !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 3px rgba(217,155,41,.18) !important;
+}
+
+.tool-page .tile,
+.tool-page .example,
+.tool-page .pill,
+.tool-page .mini-pill,
+.tool-page .version-badge,
+.tool-page .lang-toggle {
+  border-color: #e4dccf !important;
+  background: rgba(255,255,255,.72) !important;
+  color: #17130d !important;
+}
+
+.tool-page .tile.active,
+.tool-page .lang-btn.active {
+  border-color: #17130d !important;
+  background: #17130d !important;
+  color: #fffaf1 !important;
+}
+
+.tool-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #756d62;
+  font-size: 12px;
+}
+
+.tool-trust {
+  color: #756d62;
+  font-size: 12px;
+}
+
+/* MotionMap: remove old fake browser chrome while keeping controls alive. */
+.tool-motion .browser-row,
+.tool-motion .avatar,
+.tool-motion .plus,
+.tool-motion .address,
+.tool-motion .tab {
+  display: none !important;
+}
+
+.tool-motion .app-row {
+  padding: 0 !important;
+}
+
+.tool-motion .topbar {
+  padding: 0 !important;
+}
+
+.tool-motion .canvas-wrap {
+  border-color: #e4dccf !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,250,241,.64)) !important;
+  box-shadow: 0 24px 70px rgba(42,31,16,.10) !important;
+}
+
+/* Agent Persona: compact the landing so it matches studio tools. */
+.tool-page,
+.tool-persona,
+.tool-motion {
+  padding: 12px !important;
+}
+
+.tool-persona .app {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.tool-motion .app-shell {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.tool-persona .nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin-bottom: 0 !important;
+}
+
+.tool-persona .hero {
+  padding: 28px 22px !important;
+}
+
+.tool-persona .hero-footer {
+  justify-content: flex-start !important;
+  margin-top: 18px !important;
+}
+
+.tool-persona .hero-logo {
+  display: none !important;
+}
+
+.tool-persona .layout,
+.tool-persona .tool-layout {
+  grid-template-columns: minmax(310px,378px) minmax(0,1fr) !important;
+}
+
+.tool-persona #setupView,
+.tool-persona #quizView {
+  align-items: stretch !important;
+}
+
+.tool-persona .sidebar {
+  position: static !important;
+}
+
+.tool-persona .maker-footer {
+  color: #756d62;
+}
+
+@media (max-width: 920px) {
+  .tool-hero,
+  .tool-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tool-layout,
+  .tool-persona .layout,
+  .tool-persona .tool-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tool-sidebar {
+    border-right: 0 !important;
+    border-bottom: 1px solid #e4dccf !important;
+  }
+}

@@ -31,8 +31,11 @@ Current release uses static files only:
 
 ```txt
 index.html
-agent-persona.html
-motion-map.html
+apps/
+  agent-persona/
+    index.html
+  motion-map/
+    index.html
 assets/
   brand/
     akala-mark.svg
@@ -41,6 +44,7 @@ assets/
     base.css
     components.css
     gallery.css
+    tool.css
   js/
     core/
       dom.js

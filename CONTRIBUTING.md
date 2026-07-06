@@ -18,8 +18,11 @@ Current static structure:
 
 ```txt
 index.html
-agent-persona.html
-motion-map.html
+apps/
+  agent-persona/
+    index.html
+  motion-map/
+    index.html
 assets/
   css/
   js/
@@ -30,7 +33,7 @@ docs/
 For a new single-file tool, add:
 
 ```txt
-new-tool.html
+apps/new-tool/index.html
 ```
 
 Then register it in:
