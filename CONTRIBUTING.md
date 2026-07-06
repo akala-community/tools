@@ -42,6 +42,25 @@ Then register it in:
 assets/js/ui/tool-registry.js
 ```
 
+Required registry metadata:
+
+```js
+{
+  id,
+  name,
+  summary,
+  description,
+  href,
+  thumbnail,
+  category,
+  status,
+  version,
+  updated,
+  localOnly,
+  exports
+}
+```
+
 ## UI standard
 
 Use the shared light design language in `docs/design-system.md`.

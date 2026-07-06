@@ -56,6 +56,25 @@ assets/
       tool-registry.js
 docs/
   design-system.md
+
+Each tool is registered in `assets/js/ui/tool-registry.js` with standardized metadata:
+
+```js
+{
+  id,
+  name,
+  summary,
+  description,
+  href,
+  thumbnail,
+  category,
+  status,
+  version,
+  updated,
+  localOnly,
+  exports
+}
+```
 ```
 
 Recommended next split:
