@@ -14,8 +14,12 @@ AKALA Tools uses a warm light UI system for small, browser-only utilities.
 
 Sources:
 
-- `assets/css/tokens.css` for global gallery tokens
-- `assets/css/tool.css` for shared single-tool shell overrides
+- `assets/css/tokens.css` for global design tokens
+- `assets/css/base.css` for reset, page background, and site shell
+- `assets/css/components.css` for shared cards, buttons, topbar, pills, and footer
+- `assets/css/tools.css` for the shared single-tool shell
+- `assets/css/persona.css` and `assets/css/motion-map.css` for current app-specific UI
+- `assets/css/tool.css`, `assets/css/tool-persona.css`, and `assets/css/tool-motion.css` as legacy compatibility shims
 
 Core colors:
 
@@ -37,11 +41,17 @@ Use `--ink` for primary actions and main headings. Use `--gold` sparingly for ac
 
 ### Tool shell
 
-Every single-file tool should load:
+Every new single-file tool should load shared styles in this order:
 
 ```html
-<link rel="stylesheet" href="../../assets/css/tool.css" />
+<link rel="stylesheet" href="../../assets/css/tokens.css" />
+<link rel="stylesheet" href="../../assets/css/base.css" />
+<link rel="stylesheet" href="../../assets/css/components.css" />
+<link rel="stylesheet" href="../../assets/css/tools.css" />
+<link rel="stylesheet" href="../../assets/css/[tool-id].css" />
 ```
+
+Legacy tools may still load `../../assets/css/tool.css`; it imports the shared shell and compatibility shims.
 
 Use these body classes:
 
@@ -108,12 +118,23 @@ Button rules:
 
 Cards should use clear headings, short copy, and direct actions.
 
-### Status pills
+### Tags and status pills
+
+Use `tag-pill` for non-clickable metadata inside tools.
+
+```html
+<span class="tag-pill">Local only</span>
+<span class="tag-pill"><strong>3</strong> nodes</span>
+```
+
+Use `status-pill` for gallery availability badges.
 
 ```html
 <span class="status-pill available">Available</span>
 <span class="status-pill soon">Coming soon</span>
 ```
+
+Legacy aliases such as `chip`, `pill`, and `mini-pill` are compatibility-only.
 
 ## Tool layout patterns
 
