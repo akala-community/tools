@@ -18,8 +18,8 @@ Sources:
 - `assets/css/base.css` for reset, page background, and site shell
 - `assets/css/components.css` for shared cards, buttons, topbar, pills, and footer
 - `assets/css/tools.css` for the shared single-tool shell
-- `assets/css/persona.css` and `assets/css/motion-map.css` for current app-specific UI
-- `assets/css/tool.css`, `assets/css/tool-persona.css`, and `assets/css/tool-motion.css` as legacy compatibility shims
+- `apps/agent-persona/styles.css` and `apps/motion-map/styles.css` for current app-specific UI
+- `assets/css/tool.css` as a legacy compatibility shim for older single-file tools
 
 Core colors:
 
@@ -48,10 +48,10 @@ Every new single-file tool should load shared styles in this order:
 <link rel="stylesheet" href="../../assets/css/base.css" />
 <link rel="stylesheet" href="../../assets/css/components.css" />
 <link rel="stylesheet" href="../../assets/css/tools.css" />
-<link rel="stylesheet" href="../../assets/css/[tool-id].css" />
+<link rel="stylesheet" href="./styles.css" />
 ```
 
-Legacy tools may still load `../../assets/css/tool.css`; it imports the shared shell and compatibility shims.
+Legacy tools may still load `../../assets/css/tool.css`; it imports the shared shell.
 
 Use these body classes:
 

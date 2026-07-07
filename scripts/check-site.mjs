@@ -10,11 +10,11 @@ const htmlFiles = [
 const toolPages = [
   {
     file: 'apps/agent-persona/index.html',
-    appCss: '../../assets/css/persona.css',
+    appCss: './styles.css',
   },
   {
     file: 'apps/motion-map/index.html',
-    appCss: '../../assets/css/motion-map.css',
+    appCss: './styles.css',
   },
 ];
 
@@ -46,9 +46,12 @@ const legacyToolClasses = [
   'actions',
 ];
 
-const cssFiles = fs.readdirSync('assets/css')
-  .filter((file) => file.endsWith('.css'))
-  .map((file) => path.join('assets/css', file));
+const cssFiles = [
+  ...fs.readdirSync('assets/css')
+    .filter((file) => file.endsWith('.css'))
+    .map((file) => path.join('assets/css', file)),
+  ...toolPages.map(({ file }) => path.join(path.dirname(file), 'styles.css')),
+];
 
 let failed = false;
 
@@ -120,7 +123,7 @@ for (const file of cssFiles) {
   else pass(`${file}: brace balance ok`);
 }
 
-for (const file of ['assets/css/persona.css', 'assets/css/motion-map.css']) {
+for (const file of toolPages.map(({ file }) => path.join(path.dirname(file), 'styles.css'))) {
   const css = read(file);
   if (/:root/.test(css)) fail(`${file}: app CSS contains :root`);
   else pass(`${file}: no :root`);

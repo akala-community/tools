@@ -34,8 +34,12 @@ index.html
 apps/
   agent-persona/
     index.html
+    styles.css
+    app.js
   motion-map/
     index.html
+    styles.css
+    app.js
 assets/
   brand/
     akala-mark.svg
@@ -45,41 +49,25 @@ assets/
     components.css
     gallery.css
     tools.css
-    persona.css
-    motion-map.css
     tool.css              # legacy compatibility shim
-    tool-persona.css      # legacy compatibility shim
-    tool-motion.css       # legacy compatibility shim
   js/
-    apps/
-      persona.js
-      motion-map.js
-    ui/
-      tool-registry.js
+    core/
 docs/
   design-system.md
 scripts/
   check-site.mjs
 ```
 
-Each tool is registered in `assets/js/ui/tool-registry.js` with standardized metadata:
+Each tool lives in its own app directory:
 
-```js
-{
-  id,
-  name,
-  summary,
-  description,
-  href,
-  thumbnail,
-  category,
-  status,
-  version,
-  updated,
-  localOnly,
-  exports
-}
+```txt
+apps/[tool-id]/
+  index.html
+  styles.css
+  app.js
 ```
+
+Shared styles stay in `assets/css`. Keep app-only behavior and styles beside the app HTML.
 
 ## Local use
 

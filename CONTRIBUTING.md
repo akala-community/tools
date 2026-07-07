@@ -30,36 +30,16 @@ assets/
 docs/
 ```
 
-For a new single-file tool, add:
+For a new tool, add one self-contained app directory:
 
 ```txt
-apps/new-tool/index.html
+apps/new-tool/
+  index.html
+  styles.css
+  app.js
 ```
 
-Then register it in:
-
-```txt
-assets/js/ui/tool-registry.js
-```
-
-Required registry metadata:
-
-```js
-{
-  id,
-  name,
-  summary,
-  description,
-  href,
-  thumbnail,
-  category,
-  status,
-  version,
-  updated,
-  localOnly,
-  exports
-}
-```
+Then add the tool card to the homepage `index.html`.
 
 ## UI standard
 
@@ -77,10 +57,10 @@ Minimum requirements:
 ## Code style
 
 - prefer vanilla JavaScript
-- put tool behavior in `assets/js/apps/[tool-id].js`
+- put tool behavior in `apps/[tool-id]/app.js`
 - keep tool HTML focused on document structure
 - keep shared shell styles in `assets/css/tools.css`
-- keep app-only styles in `assets/css/[tool-id].css`
+- keep app-only styles in `apps/[tool-id]/styles.css`
 - keep functions small and named by behavior
 - avoid dependencies unless they remove significant complexity
 - avoid framework-specific patterns for static tools
