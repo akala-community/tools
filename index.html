@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Open-source, browser-only tools for people building agents, prompts, and product flows.">
-  <title>AKALA Tools — Open-source browser tools for agent builders</title>
+  <title>AKALA Tools - Browser tools for agent builders</title>
   <link rel="stylesheet" href="./assets/css/tokens.css">
   <link rel="stylesheet" href="./assets/css/base.css">
   <link rel="stylesheet" href="./assets/css/components.css">
@@ -14,7 +14,9 @@
   <div class="page-shell">
     <header class="topbar">
       <a class="brand" href="./index.html" aria-label="AKALA Tools home">
-        <span class="brand-mark">A</span>
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none"><path d="M32 6 54 18.5v25L32 56 10 43.5v-25L32 6Z" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><path d="M32 31 10 18.5M32 31l22-12.5M32 31v25" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 34.5c0-3.6 2.4-6 5.8-6h8.2v20.2l-7.1-4.6h-1.1c-3.4 0-5.8-2.3-5.8-5.7v-3.9Z" fill="currentColor"/><path d="M44 28.8c-2.5 0-4.6 2-4.6 4.6s2.1 4.6 4.6 4.6c1.8 0 3.4-1.1 4.1-2.6V45l-16.1 9V31l22-12.5v10.3h-9.9Z" fill="currentColor" opacity=".08"/><path d="M21.5 35.5h.01M26.5 35.5h.01" stroke="white" stroke-width="3.5" stroke-linecap="round"/></svg>
+        </span>
         <span class="brand-copy">
           <strong>AKALA Tools</strong>
           <span>Open-source agent utilities</span>
@@ -22,82 +24,115 @@
       </a>
       <nav class="nav-links" aria-label="Primary navigation">
         <a class="btn btn-ghost" href="#tools">Tools</a>
-        <a class="btn btn-ghost" href="#principles">Principles</a>
         <a class="btn btn-secondary" href="./docs/design-system.md">Design system</a>
       </nav>
     </header>
 
     <main>
       <section class="hero">
-        <div class="card hero-copy">
-          <span class="eyebrow">Local-first tools for agent builders</span>
-          <h1>Open-source utilities with product-grade polish.</h1>
-          <p>Prompt builders, diagram studios, schema helpers, and review utilities. Fast static tools, refined UI, useful exports, zero account wall.</p>
+        <div class="hero-copy">
+          <h1>Browser tools for agent builders.</h1>
+          <p>Small, local-first utilities for prompts, diagrams, schemas, and reviews. No login. No backend. Useful exports.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#tools">Browse tools</a>
             <a class="btn btn-secondary" href="./apps/agent-persona/index.html">Open Persona Builder</a>
           </div>
         </div>
-
-        <aside class="card hero-panel" aria-label="Current tools">
-          <h2 class="panel-title">Production-ready base</h2>
-          <div class="mini-stack">
-            <a class="mini-tool" href="./apps/agent-persona/index.html">
-              <strong>Agent Persona Builder</strong>
-              <span>Guided system prompt generation with bilingual output.</span>
-            </a>
-            <a class="mini-tool" href="./apps/motion-map/index.html">
-              <strong>MotionMap</strong>
-              <span>Animated flow diagrams with PNG, SVG, and video export.</span>
-            </a>
-            <div class="mini-tool">
-              <strong>Next: Prompt Diff</strong>
-              <span>Prompt version comparison for safer iteration.</span>
-            </div>
-          </div>
-        </aside>
       </section>
 
       <section id="tools" aria-labelledby="tools-title">
         <div class="section-head">
           <div>
             <h2 id="tools-title">Tools</h2>
-            <p>Purpose-built utilities with obvious starts, strong defaults, local state, and export paths that feel native.</p>
+            <p>Open a tool, use the defaults, export the result.</p>
           </div>
         </div>
-        <div class="tool-grid" data-tool-grid></div>
+        <div class="tool-grid">
+          <article class="card tool-card available">
+            <a class="tool-thumb" href="./apps/agent-persona/index.html" aria-label="Open Agent Persona Builder">
+              <span>Persona setup → quiz → prompt</span>
+            </a>
+            <div class="tool-card-body">
+              <div class="tool-meta-row">
+                <span>Prompt design</span>
+                <span class="status-pill available">Available</span>
+              </div>
+              <h3>Agent Persona Builder</h3>
+              <p class="tool-summary">Guided system prompt generation for AI agents.</p>
+              <p>Define an agent, answer preference questions, and export a copy-ready system prompt in English or Indonesian.</p>
+              <div class="tool-meta">Prompt design / Local-only / Exports TXT</div>
+              <div class="tool-actions">
+                <a class="btn btn-primary" href="./apps/agent-persona/index.html">Open tool</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card tool-card available">
+            <a class="tool-thumb" href="./apps/motion-map/index.html" aria-label="Open MotionMap">
+              <span>Flow text → diagram → export</span>
+            </a>
+            <div class="tool-card-body">
+              <div class="tool-meta-row">
+                <span>Diagramming</span>
+                <span class="status-pill available">Available</span>
+              </div>
+              <h3>MotionMap</h3>
+              <p class="tool-summary">Animated flow diagrams from simple arrow syntax.</p>
+              <p>Write a plain-text flow, render an animated diagram, then export PNG, SVG, or video assets.</p>
+              <div class="tool-meta">Diagramming / Local-only / Exports PNG, SVG, WEBM</div>
+              <div class="tool-actions">
+                <a class="btn btn-primary" href="./apps/motion-map/index.html">Open tool</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card tool-card soon">
+            <a class="tool-thumb" href="#roadmap" aria-label="View Prompt Diff roadmap item">
+              <span>Draft A ↔ Draft B</span>
+            </a>
+            <div class="tool-card-body">
+              <div class="tool-meta-row">
+                <span>Prompt review</span>
+                <span class="status-pill soon">Coming soon</span>
+              </div>
+              <h3>Prompt Diff</h3>
+              <p class="tool-summary">Compare prompt versions before shipping.</p>
+              <p>Review behavior changes between two prompt drafts and flag risky instruction drift.</p>
+              <div class="tool-meta">Prompt review / Local-only</div>
+              <div class="tool-actions">
+                <a class="btn btn-secondary" href="#roadmap">View roadmap</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card tool-card soon">
+            <a class="tool-thumb" href="#roadmap" aria-label="View Tool Schema Builder roadmap item">
+              <span>Form fields → JSON schema</span>
+            </a>
+            <div class="tool-card-body">
+              <div class="tool-meta-row">
+                <span>Developer utility</span>
+                <span class="status-pill soon">Coming soon</span>
+              </div>
+              <h3>Tool Schema Builder</h3>
+              <p class="tool-summary">Draft JSON schemas and function tool definitions.</p>
+              <p>Use a guided form to build structured tool definitions without writing schema by hand.</p>
+              <div class="tool-meta">Developer utility / Local-only / Exports JSON</div>
+              <div class="tool-actions">
+                <a class="btn btn-secondary" href="#roadmap">View roadmap</a>
+              </div>
+            </div>
+          </article>
+        </div>
       </section>
 
-      <section id="principles" aria-labelledby="principles-title">
-        <div class="section-head">
-          <div>
-            <h2 id="principles-title">Design principles</h2>
-            <p>A shared light UI system keeps every tool consistent without making them feel generic.</p>
-          </div>
-        </div>
-        <div class="principles">
-          <article class="card principle">
-            <h3>Immediate value</h3>
-            <p>Every tool starts with examples, clear hierarchy, and one primary action.</p>
-          </article>
-          <article class="card principle">
-            <h3>Trust through locality</h3>
-            <p>Inputs stay in the browser. State uses localStorage. Exports use native browser APIs.</p>
-          </article>
-          <article class="card principle">
-            <h3>Quietly premium</h3>
-            <p>Warm neutrals, crisp spacing, high contrast text, and restrained motion.</p>
-          </article>
-        </div>
-      </section>
     </main>
 
     <footer class="footer">
-      <span>AKALA Tools · Open-source browser utilities</span>
-      <span id="roadmap"><a href="./CONTRIBUTING.md">Contributing</a> · Roadmap: Prompt Diff · Schema Builder · Eval Sheet</span>
+      <span>AKALA Tools. Open-source browser utilities.</span>
+      <span id="roadmap"><a href="./CONTRIBUTING.md">Contributing</a>. Roadmap: Prompt Diff, Schema Builder, Eval Sheet.</span>
     </footer>
   </div>
 
-  <script type="module" src="./assets/js/ui/tool-registry.js"></script>
 </body>
 </html>

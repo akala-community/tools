@@ -48,7 +48,6 @@ svg {
 }
 
 .page-shell {
-  width: calc(100% - 24px);
-  max-width: none;
+  width: min(calc(100% - 24px), 1440px);
   margin: 0 auto;
 }

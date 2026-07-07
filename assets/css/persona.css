@@ -471,11 +471,7 @@
   }
 }
 
-/* Former compatibility rules, kept here so Persona owns its app-specific layout. */
 .tool-persona .tool-shell {
-  width: 100% !important;
-  max-width: none !important;
-  padding: 0 !important;
   overflow: hidden;
 }
 
@@ -483,31 +479,24 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  margin-bottom: 0 !important;
-}
-
-.tool-persona .tool-hero {
-  padding: 28px 22px !important;
 }
 
 .tool-persona .hero-footer {
-  justify-content: flex-start !important;
-  margin-top: 18px !important;
+  justify-content: flex-start;
+  margin-top: 18px;
 }
 
-
-.tool-persona .tool-layout,
 .tool-persona .tool-layout {
-  grid-template-columns: minmax(310px,378px) minmax(0,1fr) !important;
+  grid-template-columns: minmax(310px,378px) minmax(0,1fr);
 }
 
 .tool-persona #setupView,
 .tool-persona #quizView {
-  align-items: stretch !important;
+  align-items: stretch;
 }
 
 .tool-persona .tool-sidebar {
-  position: static !important;
+  position: static;
 }
 
 .tool-persona .maker-footer {
@@ -515,8 +504,7 @@
 }
 
 @media (max-width: 920px) {
-  .tool-persona .tool-layout,
   .tool-persona .tool-layout {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
 }

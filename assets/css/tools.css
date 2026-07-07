@@ -1,10 +1,10 @@
 /* Shared AKALA tool shell. Loaded after each single-file tool's local styles. */
 .tool-page {
-  padding: 12px;
+  padding: 0;
   color-scheme: light;
   background:
-    radial-gradient(circle at 18% 0%, rgba(217, 155, 41, .18), transparent 28rem),
-    radial-gradient(circle at 88% 8%, rgba(49, 95, 159, .10), transparent 30rem),
+    radial-gradient(circle at 18% 0%, rgba(217, 155, 41, .16), transparent 28rem),
+    radial-gradient(circle at 88% 8%, rgba(49, 95, 159, .08), transparent 30rem),
     linear-gradient(180deg,var(--bg-2) 0%,var(--bg) 48%,var(--soft) 100%);
   color: var(--ink);
   text-rendering: geometricPrecision;
@@ -13,12 +13,7 @@
 
 .tool-shell {
   width: 100%;
-  min-height: calc(100vh - 24px);
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  background: rgba(255, 255, 255,.72);
-  box-shadow: 0 24px 80px rgba(42, 31, 16, .12);
-  backdrop-filter: blur(18px);
+  min-height: 100vh;
 }
 
 .tool-topbar {
@@ -26,11 +21,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  min-height: 80px;
+  min-height: 76px;
   margin: 0;
-  padding: 18px 22px;
+  padding: 16px 24px;
   border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255,.72);
+  background: rgba(255, 250, 241,.76);
   backdrop-filter: blur(18px);
 }
 
@@ -162,7 +157,7 @@
   align-items: end;
   justify-content: space-between;
   gap: 20px;
-  padding: 28px 22px;
+  padding: 28px 24px;
   text-align: left;
   border-bottom: 1px solid var(--line);
 }
@@ -214,16 +209,16 @@
 .tool-sidebar {
   min-height: 0;
   overflow: auto;
-  padding: 18px;
+  padding: 18px 24px 24px;
   border-right: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(255, 255, 255,.56), rgba(255, 250, 241,.62));
+  background: rgba(255, 250, 241,.42);
 }
 
 .tool-workspace {
   min-width: 0;
   overflow: auto;
-  padding: 18px;
-  background: linear-gradient(180deg, rgba(255, 255, 255,.52), rgba(255, 250, 241,.34));
+  padding: 18px 24px 24px;
+  background: rgba(255, 255, 255,.30);
 }
 
 .tool-page .setup-card {

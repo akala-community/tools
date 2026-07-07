@@ -1,32 +1,26 @@
 /* MotionMap app-specific studio controls and canvas UI. Shared shell lives in tools.css. */
 .tool-motion .tool-shell {
-  min-height: calc(100vh - 36px);
+  min-height: 100vh;
   display: grid;
-  grid-template-rows: auto 1fr;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,250,241,.82));
-  box-shadow: var(--shadow-lift);
+  grid-template-rows: auto auto 1fr;
 }
 .tool-motion .tool-topbar {
   border-bottom: 1px solid var(--line);
-  background: rgba(255,255,255,.72);
+  background: rgba(255,250,241,.76);
   backdrop-filter: blur(18px);
 }
 
 .tool-motion .tool-mark {
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 9px;
-  background: #080808;
-  color: var(--paper);
-  font-weight: 860;
-  letter-spacing: -.05em;
+  width: 42px;
+  height: 42px;
+  display: block;
+  border: 1px solid var(--line-strong);
+  border-radius: 15px;
+  padding: 6px;
+  background: linear-gradient(145deg, var(--ink), var(--ink-soft));
+  color: var(--bg-2);
   flex-shrink: 0;
+  box-shadow: 0 14px 30px rgba(23, 19, 13, .16);
 }
 
 .tool-motion .tool-brand {
@@ -670,17 +664,4 @@
   .tool-motion .exports, .tool-motion .grid-2 {
     grid-template-columns: 1fr;
   }
-}
-/* MotionMap shell refinements. */
-.tool-motion .tool-shell {
-  width: 100% !important;
-  max-width: none !important;
-}
-.tool-motion .tool-topbar {
-  padding: 0 !important;
-}
-.tool-motion .tool-canvas-wrap {
-  border-color: var(--line) !important;
-  background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,250,241,.64)) !important;
-  box-shadow: 0 24px 70px rgba(42,31,16,.10) !important;
 }

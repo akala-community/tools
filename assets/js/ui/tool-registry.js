@@ -64,7 +64,7 @@ const metaLine = (tool) => [
   tool.category,
   tool.localOnly ? 'Local-only' : null,
   tool.exports.length ? `Exports ${tool.exports.join(', ').toUpperCase()}` : null
-].filter(Boolean).join(' · ');
+].filter(Boolean).join(' / ');
 
 if (grid) {
   grid.innerHTML = tools.map((tool) => `
