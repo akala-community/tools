@@ -15,6 +15,7 @@
 - Fixed FlowClip browser compatibility by restoring Dagre's default import shape and replacing canvas `roundRect()` with a manual rounded-rectangle path.
 - Added FlowClip title and subtitle controls with local autosave and export support.
 - Added FlowClip motion modes for flowing dashed arrows, draw path, pulse dot, and static/no motion, with matching SVG preview and WebM export behavior.
+- Fixed FlowClip connector ports and arrowheads so lines start from node edge centers and arrows match connector tangent.
 - Verified `npm run build` passes after FlowClip changes.
 
 ## 2026-07-08

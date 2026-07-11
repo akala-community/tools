@@ -265,7 +265,8 @@
   fill: #315f9f;
   filter: drop-shadow(0 0 10px rgba(49,95,159,.35));
 }
-.arrow-head { fill: #315f9f; }
+.edge-arrow { fill: #315f9f; }
+.edge-arrow-muted { fill: rgba(23,19,13,.30); }
 .edge-label {
   fill: #756d62;
   font: 800 20px var(--sans);
@@ -285,7 +286,8 @@
 .theme-dark .edge-draw,
 .theme-dark .edge-static { stroke: #60a5fa; filter: drop-shadow(0 0 12px rgba(96,165,250,.5)); }
 .theme-dark .edge-dot { fill: #60a5fa; filter: drop-shadow(0 0 12px rgba(96,165,250,.5)); }
-.theme-dark .arrow-head { fill: #60a5fa; }
+.theme-dark .edge-arrow { fill: #60a5fa; }
+.theme-dark .edge-arrow-muted { fill: rgba(148,163,184,.45); }
 .theme-dark .edge-label { fill: #bfdbfe; }
 
 .theme-sketch .stage-bg { fill: #fbf3df; }
@@ -308,7 +310,8 @@
   stroke-dasharray: 12 10;
 }
 .theme-sketch .edge-dot { fill: #17130d; }
-.theme-sketch .arrow-head { fill: #17130d; }
+.theme-sketch .edge-arrow { fill: #17130d; }
+.theme-sketch .edge-arrow-muted { fill: rgba(23,19,13,.34); }
 
 .animation-flow .node,
 .animation-draw .node,

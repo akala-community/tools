@@ -117,17 +117,27 @@ function getNodeSize(label: string) {
   return { width, height, lines };
 }
 
-function getRectBoundaryPoint(
+function getEdgePorts(
   from: { px: number; py: number; width: number; height: number },
-  to: { px: number; py: number; width: number; height: number }
+  to: { px: number; py: number; width: number; height: number },
+  isVertical: boolean
 ) {
   const dx = to.px - from.px;
   const dy = to.py - from.py;
-  if (dx === 0 && dy === 0) return { x: from.px, y: from.py };
-  const scaleX = dx === 0 ? Number.POSITIVE_INFINITY : (from.width / 2) / Math.abs(dx);
-  const scaleY = dy === 0 ? Number.POSITIVE_INFINITY : (from.height / 2) / Math.abs(dy);
-  const scale = Math.min(scaleX, scaleY);
-  return { x: from.px + dx * scale, y: from.py + dy * scale };
+  const xSign = Math.sign(dx || 1);
+  const ySign = Math.sign(dy || 1);
+
+  if (isVertical) {
+    return {
+      start: { x: from.px, y: from.py + ySign * from.height / 2 },
+      end: { x: to.px, y: to.py - ySign * to.height / 2 },
+    };
+  }
+
+  return {
+    start: { x: from.px + xSign * from.width / 2, y: from.py },
+    end: { x: to.px - xSign * to.width / 2, y: to.py },
+  };
 }
 
 function getSmoothCurve(start: { x: number; y: number }, end: { x: number; y: number }, isVertical: boolean) {
@@ -483,8 +493,7 @@ export default function FlowClipApp() {
           const from = placedById.get(edge.from);
           const to = placedById.get(edge.to);
           if (!from || !to) return;
-          const start = getRectBoundaryPoint(from, to);
-          const end = getRectBoundaryPoint(to, from);
+          const { start, end } = getEdgePorts(from, to, isVertical);
           const curve = getSmoothCurve(start, end, isVertical);
 
           ctx.lineCap = 'round';
@@ -705,9 +714,6 @@ function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { 
   return (
     <svg viewBox={`0 0 ${viewBox.width} ${viewBox.height}`} role="img" aria-label={title}>
       <defs>
-        <marker id="flowclip-arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
-          <path d="M1.5,1.5 L8,4 L1.5,6.5 Z" className="arrow-head" />
-        </marker>
         <filter id="flowclip-soft-shadow" x="-30%" y="-30%" width="160%" height="180%">
           <feDropShadow dx="0" dy="18" stdDeviation="18" floodOpacity="0.18" />
         </filter>
@@ -723,8 +729,7 @@ function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { 
           const from = placedById.get(edge.from);
           const to = placedById.get(edge.to);
           if (!from || !to) return null;
-          const start = getRectBoundaryPoint(from, to);
-          const end = getRectBoundaryPoint(to, from);
+          const { start, end } = getEdgePorts(from, to, isVertical);
           const startX = start.x;
           const startY = start.y;
           const endX = end.x;
@@ -735,17 +740,18 @@ function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { 
           const path = curve.path;
           return (
             <g key={edge.id} className="edge" style={{ ['--i' as string]: edge.order, ['--dur' as string]: `${duration}s` }}>
-              <path className="edge-path edge-base" d={path} markerEnd={animation === 'none' ? 'url(#flowclip-arrow)' : undefined} />
-              {animation === 'draw' && <path className="edge-path edge-draw" d={path} markerEnd="url(#flowclip-arrow)" />}
-              {animation === 'flow' && <path className="edge-path edge-flow" d={path} markerEnd="url(#flowclip-arrow)" />}
+              <path className="edge-path edge-base" d={path} />
+              {animation === 'draw' && <path className="edge-path edge-draw" d={path} />}
+              {animation === 'flow' && <path className="edge-path edge-flow" d={path} />}
               {animation === 'dot' && (
                 <>
-                  <path className="edge-path edge-static" d={path} markerEnd="url(#flowclip-arrow)" />
+                  <path className="edge-path edge-static" d={path} />
                   <circle className="edge-dot" r="13">
                     <animateMotion dur="3.2s" repeatCount="indefinite" begin={`${edge.order * 0.35}s`} path={path} />
                   </circle>
                 </>
               )}
+              <path className={animation === 'none' ? 'edge-arrow edge-arrow-muted' : 'edge-arrow'} d="M 0 0 L -16 -7 L -16 7 Z" transform={`translate(${endX} ${endY}) rotate(${curve.angle * 180 / Math.PI})`} />
               {edge.label && <text className="edge-label" x={midX} y={midY - 18} textAnchor="middle">{edge.label}</text>}
             </g>
           );
