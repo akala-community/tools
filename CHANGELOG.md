@@ -22,6 +22,7 @@
 - Fixed FlowClip PNG export by using a hidden fixed-size render target and added project JSON export/import controls.
 - Fixed blank FlowClip PNG/SVG exports by capturing the visible preview again and scaling PNG output to the selected social width.
 - Replaced FlowClip PNG export with the shared canvas renderer, added blank-image detection, reused the renderer for WebM frames, pinned package versions, and added `@astrojs/check` so `npm run check` runs non-interactively.
+- Hardened FlowClip project imports with file-size and field-length limits, added export size guards for very large diagrams, and added GitHub Actions CI for check/build.
 
 ## 2026-07-08
 

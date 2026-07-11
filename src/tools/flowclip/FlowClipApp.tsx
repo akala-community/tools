@@ -86,6 +86,13 @@ const ANIMATIONS: Record<AnimationKey, { label: string }> = {
   none: { label: 'No motion' },
 };
 
+const MAX_PROJECT_JSON_BYTES = 256 * 1024;
+const MAX_FLOW_TEXT_LENGTH = 20_000;
+const MAX_TITLE_LENGTH = 120;
+const MAX_SUBTITLE_LENGTH = 200;
+const MAX_EXPORT_NODES = 80;
+const MAX_EXPORT_EDGES = 140;
+
 function cleanToken(value: string) {
   return value.trim().replace(/^['"]|['"]$/g, '').replace(/\s+/g, ' ');
 }
@@ -344,6 +351,10 @@ function clampDuration(value: number) {
   return Math.min(20, Math.max(3, value));
 }
 
+function limitText(value: string, maxLength: number) {
+  return value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').slice(0, maxLength);
+}
+
 type FlowClipProject = {
   version: 1;
   text: string;
@@ -432,11 +443,24 @@ export default function FlowClipApp() {
   const ratioInfo = RATIOS[ratio];
   const fileBase = safeFileName(displayTitle);
 
+  function canExportDiagram(format: string) {
+    if (parsed.nodes.length > MAX_EXPORT_NODES || parsed.edges.length > MAX_EXPORT_EDGES) {
+      setStatus(`${format} export blocked. Keep flows under ${MAX_EXPORT_NODES} nodes and ${MAX_EXPORT_EDGES} edges.`);
+      return false;
+    }
+    return true;
+  }
+
   function applyProjectState(data: unknown) {
-    if (!isProjectState(data)) return;
-    if (typeof data.text === 'string') setText(data.text);
-    if (typeof data.customTitle === 'string') setCustomTitle(data.customTitle);
-    if (typeof data.subtitle === 'string') setSubtitle(data.subtitle);
+    if (!isProjectState(data) || Array.isArray(data)) {
+      throw new Error('Invalid FlowClip project.');
+    }
+    if ('version' in data && data.version !== 1) {
+      throw new Error('Unsupported FlowClip project version.');
+    }
+    if (typeof data.text === 'string') setText(limitText(data.text, MAX_FLOW_TEXT_LENGTH));
+    if (typeof data.customTitle === 'string') setCustomTitle(limitText(data.customTitle, MAX_TITLE_LENGTH));
+    if (typeof data.subtitle === 'string') setSubtitle(limitText(data.subtitle, MAX_SUBTITLE_LENGTH));
     if (data.ratio && RATIOS[data.ratio as RatioKey]) setRatio(data.ratio as RatioKey);
     if (data.theme && THEMES[data.theme as ThemeKey]) setTheme(data.theme as ThemeKey);
     const importedAnimation = (data as { animation?: unknown }).animation;
@@ -454,6 +478,10 @@ export default function FlowClipApp() {
   async function importProjectJson(file: File | undefined) {
     if (!file) return;
     try {
+      if (file.size > MAX_PROJECT_JSON_BYTES) {
+        setStatus('Project JSON is too large. Maximum size is 256KB.');
+        return;
+      }
       const data = JSON.parse(await file.text());
       applyProjectState(data);
       setStatus('Project JSON loaded.');
@@ -599,7 +627,7 @@ export default function FlowClipApp() {
   }
 
   async function exportPng() {
-    if (isExporting) return;
+    if (isExporting || !canExportDiagram('PNG')) return;
     setIsExporting(true);
     setStatus(`Exporting PNG ${ratioInfo.size}…`);
     try {
@@ -628,7 +656,7 @@ export default function FlowClipApp() {
   }
 
   async function exportSvg() {
-    if (!exportRef.current || isExporting) return;
+    if (!exportRef.current || isExporting || !canExportDiagram('SVG')) return;
     setIsExporting(true);
     setStatus(`Exporting SVG ${ratioInfo.size}…`);
     try {
@@ -644,7 +672,7 @@ export default function FlowClipApp() {
   }
 
   async function exportWebm() {
-    if (isExporting) return;
+    if (isExporting || !canExportDiagram('WebM')) return;
     setIsExporting(true);
     setStatus('Recording WebM…');
 
