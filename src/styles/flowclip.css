@@ -1,0 +1,361 @@
+.flowclip-page {
+  --flowclip-panel: rgba(255, 255, 255, .78);
+}
+
+.flowclip-app {
+  min-height: calc(100vh - 76px);
+}
+
+.flowclip-hero {
+  align-items: center;
+}
+
+.flowclip-hero code {
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .7);
+  font-family: var(--mono);
+  font-size: .9em;
+}
+
+.flowclip-hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.flowclip-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
+  gap: 18px;
+  padding: 18px 24px 24px;
+}
+
+.flowclip-editor,
+.flowclip-controls,
+.flowclip-stage-wrap,
+.flowclip-export {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--flowclip-panel);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.82), 0 12px 30px rgba(42,31,16,.055);
+}
+
+.flowclip-editor {
+  position: sticky;
+  top: 18px;
+  align-self: start;
+  padding: 16px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.panel-head h2 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -.04em;
+}
+
+.panel-head p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.flowclip-editor textarea {
+  width: 100%;
+  min-height: 320px;
+  resize: vertical;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  outline: none;
+  background: rgba(255, 253, 248, .86);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.55;
+  box-shadow: inset 0 2px 8px rgba(42,31,16,.04);
+}
+
+.flowclip-editor textarea:focus {
+  border-color: var(--ink);
+}
+
+.flowclip-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.flowclip-help {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255,255,255,.48);
+}
+
+.flowclip-help strong {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--muted);
+}
+
+.flowclip-help code {
+  color: var(--ink-soft);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.flowclip-warnings {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(217,155,41,.4);
+  border-radius: 16px;
+  background: var(--gold-soft);
+  color: var(--gold-ink);
+  font-size: 13px;
+}
+
+.flowclip-warnings p {
+  margin: 0;
+}
+
+.flowclip-workspace {
+  min-width: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.flowclip-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 12px;
+  padding: 14px;
+}
+
+.flowclip-controls label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.flowclip-controls select,
+.flowclip-controls input {
+  min-height: 42px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0 11px;
+  background: rgba(255,255,255,.76);
+  color: var(--ink);
+  font: 800 13px var(--sans);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.flowclip-stage-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 620px;
+  padding: 24px;
+  background:
+    linear-gradient(45deg, rgba(23,19,13,.04) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(23,19,13,.04) 25%, transparent 25%),
+    rgba(255,255,255,.44);
+  background-size: 22px 22px;
+}
+
+.flowclip-stage {
+  width: min(100%, 520px);
+  max-height: 78vh;
+  overflow: hidden;
+  border-radius: 34px;
+  background: #fffaf1;
+  box-shadow: 0 36px 100px rgba(42,31,16,.16);
+}
+
+.flowclip-stage[style*="1920 / 1080"] {
+  width: min(100%, 820px);
+}
+
+.flowclip-stage[style*="1080 / 1080"] {
+  width: min(100%, 600px);
+}
+
+.flowclip-stage svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.stage-bg { fill: #fffaf1; }
+.bg-orb { display: none; }
+.diagram-title {
+  fill: #17130d;
+  font: 900 54px var(--sans);
+  letter-spacing: -2px;
+}
+.diagram-subtitle {
+  fill: #756d62;
+  font: 800 19px var(--sans);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.node-card {
+  fill: rgba(255,255,255,.92);
+  stroke: #d5cab9;
+  stroke-width: 2;
+}
+.node-label {
+  fill: #17130d;
+  font: 900 34px var(--sans);
+  letter-spacing: -1.2px;
+}
+.edge-path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.edge-base {
+  stroke: rgba(23,19,13,.14);
+  stroke-width: 5;
+  stroke-dasharray: 14 14;
+}
+.edge-motion {
+  stroke: #315f9f;
+  stroke-width: 4;
+  stroke-dasharray: 14 14;
+  animation: flowclip-dash .9s linear infinite;
+}
+.arrow-head { fill: #315f9f; }
+.edge-label {
+  fill: #756d62;
+  font: 800 20px var(--sans);
+}
+.empty-state {
+  fill: #756d62;
+  font: 900 28px var(--sans);
+}
+
+.theme-dark .stage-bg { fill: #080b13; }
+.theme-dark .diagram-title { fill: #f8fafc; }
+.theme-dark .diagram-subtitle { fill: #93a4bc; }
+.theme-dark .node-card { fill: rgba(15,23,42,.92); stroke: rgba(148,163,184,.45); }
+.theme-dark .node-label { fill: #f8fafc; }
+.theme-dark .edge-base { stroke: rgba(148,163,184,.22); }
+.theme-dark .edge-motion { stroke: #60a5fa; filter: drop-shadow(0 0 12px rgba(96,165,250,.5)); }
+.theme-dark .arrow-head { fill: #60a5fa; }
+.theme-dark .edge-label { fill: #bfdbfe; }
+
+.theme-sketch .stage-bg { fill: #fbf3df; }
+.theme-sketch .diagram-title,
+.theme-sketch .node-label {
+  font-family: "Comic Sans MS", "Bradley Hand", var(--sans);
+}
+.theme-sketch .node-card {
+  fill: rgba(255,252,242,.9);
+  stroke: #17130d;
+  stroke-width: 3;
+  stroke-dasharray: 9 5;
+}
+.theme-sketch .edge-base { stroke: rgba(23,19,13,.16); }
+.theme-sketch .edge-motion {
+  stroke: #17130d;
+  stroke-width: 6;
+  stroke-dasharray: 12 10;
+}
+.theme-sketch .arrow-head { fill: #17130d; }
+
+.animation-reveal .node,
+.animation-pulse .node {
+  opacity: 1;
+}
+
+.animation-reveal .edge-motion,
+.animation-pulse .edge-motion {
+  animation: flowclip-dash .9s linear infinite;
+}
+
+.flowclip-export {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+}
+
+.flowclip-export span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.flowclip-export div {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@keyframes flowclip-dash {
+  to { stroke-dashoffset: -28; }
+}
+
+@media (max-width: 980px) {
+  .flowclip-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .flowclip-editor {
+    position: static;
+  }
+
+  .flowclip-controls {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .flowclip-layout,
+  .tool-hero {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .flowclip-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .flowclip-export {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .flowclip-export div,
+  .flowclip-hero-actions {
+    justify-content: stretch;
+  }
+
+  .flowclip-export .tool-btn,
+  .flowclip-hero-actions .tool-btn {
+    flex: 1;
+  }
+}

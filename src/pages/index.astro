@@ -10,8 +10,7 @@ import '../styles/gallery.css';
         <h1>Browser tools for agent builders.</h1>
         <p>Small, local-first utilities for prompts, diagrams, schemas, and reviews. No login. No backend. Useful exports.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#tools">Browse tools</a>
-          <a class="btn btn-secondary" href="/tools/agent-persona/">Open Persona Builder</a>
+          <a class="btn btn-primary" href="/tools/motion-map-v2/">Open MotionMap</a>
         </div>
       </div>
     </section>
@@ -25,46 +24,22 @@ import '../styles/gallery.css';
       </div>
       <div class="tool-grid">
         <ToolCard
-          href="/tools/agent-persona/"
-          thumb="Persona setup → quiz → prompt"
-          category="Prompt design"
-          title="Agent Persona Builder"
-          summary="Guided system prompt generation for AI agents."
-          description="Define an agent, answer preference questions, and export a copy-ready system prompt in English or Indonesian."
-          meta="Prompt design / Local-only / Exports TXT"
+          href="/tools/flowclip/"
+          thumb="A → B → C → video"
+          category="Creator diagrams"
+          title="FlowClip"
+          summary="Animated social diagrams from simple arrow text."
+          description="Type a flow, pick a social ratio and theme, then export PNG, SVG, or WebM video."
+          meta="Social-ready / Local-only / No canvas editor"
         />
         <ToolCard
           href="/tools/motion-map-v2/"
           thumb="Flow text → diagram → export"
           category="Diagramming"
-          title="MotionMap v2 Spike"
-          summary="React Flow prototype for animated flow diagrams."
-          description="Explore React Flow as the canvas layer for MotionMap before the full rebuild."
-          meta="Diagramming / Local-only / React Flow spike"
-        />
-        <ToolCard
-          href="#roadmap"
-          thumb="Draft A ↔ Draft B"
-          category="Prompt review"
-          status="Coming soon"
-          statusKind="soon"
-          title="Prompt Diff"
-          summary="Compare prompt versions before shipping."
-          description="Review behavior changes between two prompt drafts and flag risky instruction drift."
-          meta="Prompt review / Local-only"
-          action="View roadmap"
-        />
-        <ToolCard
-          href="#roadmap"
-          thumb="Form fields → JSON schema"
-          category="Developer utility"
-          status="Coming soon"
-          statusKind="soon"
-          title="Tool Schema Builder"
-          summary="Draft JSON schemas and function tool definitions."
-          description="Use a guided form to build structured tool definitions without writing schema by hand."
-          meta="Developer utility / Local-only / Exports JSON"
-          action="View roadmap"
+          title="MotionMap"
+          summary="Animated flow diagrams from simple arrow syntax."
+          description="Write a plain-text flow, render it with animated connectors, then export PNG or video."
+          meta="Diagramming / Local-only / React Flow"
         />
       </div>
     </section>

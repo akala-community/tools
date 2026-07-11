@@ -1,0 +1,12 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import FlowClipApp from '../../tools/flowclip/FlowClipApp';
+import '../../styles/flowclip.css';
+---
+<ToolLayout
+  title="FlowClip - AKALA Tools"
+  description="Create animated social-ready diagrams from simple arrow text."
+  bodyClass="tool-page flowclip-page"
+>
+  <FlowClipApp client:load />
+</ToolLayout>
