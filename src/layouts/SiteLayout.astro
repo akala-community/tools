@@ -1,0 +1,36 @@
+---
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/components.css';
+import Brand from '../components/Brand.astro';
+
+const {
+  title = 'AKALA Tools - Browser tools for agent builders',
+  description = 'Open-source, browser-only tools for people building agents, prompts, and product flows.'
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={description} />
+  <title>{title}</title>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <Brand href="/" />
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a class="btn btn-ghost" href="/#tools">Tools</a>
+        <a class="btn btn-secondary" href="/docs/design-system/">Design system</a>
+      </nav>
+    </header>
+    <slot />
+    <footer class="footer">
+      <span>AKALA Tools. Open-source browser utilities.</span>
+      <span><a href="/CONTRIBUTING.md">Contributing</a>. Roadmap: Prompt Diff, Schema Builder, Eval Sheet.</span>
+    </footer>
+  </div>
+</body>
+</html>

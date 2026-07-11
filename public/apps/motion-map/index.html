@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MotionMap - Animated Diagram Studio</title>
+  <meta name="description" content="Build, preview, and export animated motion diagrams directly in your browser." />
+  <link rel="stylesheet" href="../../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../../assets/css/base.css" />
+  <link rel="stylesheet" href="../../assets/css/components.css" />
+  <link rel="stylesheet" href="../../assets/css/tools.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="tool-page tool-motion">
+  <div class="tool-shell">
+    <header class="tool-topbar">
+      <a class="tool-brand" href="../../index.html" aria-label="AKALA Tools home">
+        <svg class="tool-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M32 6 54 18.5v25L32 56 10 43.5v-25L32 6Z" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><path d="M32 31 10 18.5M32 31l22-12.5M32 31v25" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 34.5c0-3.6 2.4-6 5.8-6h8.2v20.2l-7.1-4.6h-1.1c-3.4 0-5.8-2.3-5.8-5.7v-3.9Z" fill="currentColor"/><path d="M44 28.8c-2.5 0-4.6 2-4.6 4.6s2.1 4.6 4.6 4.6c1.8 0 3.4-1.1 4.1-2.6V45l-16.1 9V31l22-12.5v10.3h-9.9Z" fill="currentColor" opacity=".08"/><path d="M21.5 35.5h.01M26.5 35.5h.01" stroke="white" stroke-width="3.5" stroke-linecap="round"/></svg>
+        <span class="tool-brand-copy"><strong>AKALA Tools / MotionMap</strong><span>Diagram studio. Local-first. Export-ready.</span></span>
+      </a>
+      <div class="tool-actions">
+        <a class="btn btn-secondary" href="../../index.html">Home</a>
+        <button class="btn btn-secondary" id="saveLocalBtn" type="button">Save</button>
+        <button class="btn btn-secondary" id="exportPngTop" type="button">PNG</button>
+        <button class="btn btn-secondary" id="exportVideoTop" type="button">Video</button>
+        <button class="btn btn-primary" id="exportSvgTop" type="button">Export SVG</button>
+      </div>
+    </header>
+
+    <section class="tool-hero">
+      <div>
+        <div class="tool-eyebrow">Diagram Studio</div>
+        <h1>Map agent flows from plain text.</h1>
+        <p>Create animated diagrams with PNG, SVG, and video export. Everything runs locally in your browser.</p>
+      </div>
+      <div class="tool-actions">
+        <button class="btn btn-primary" id="renderBtn" type="button">Render diagram</button>
+        <button class="btn btn-secondary" type="button" data-example="sales">Use example</button>
+      </div>
+    </section>
+
+    <main class="tool-layout">
+      <aside class="tool-sidebar">
+        <div class="side-stack">
+          <section class="card">
+            <div class="section-head"><div class="section-title">1. Flow Definition</div><div class="help">?</div></div>
+            <label for="titleInput">Diagram title</label>
+            <input id="titleInput" type="text" value="Lead to Loyalty" />
+            <div class="spacer"></div>
+            <label for="diagramInput">Flow text</label>
+            <textarea id="diagramInput" spellcheck="false">Lead -> WhatsApp -> AI Agent -> CRM
+AI Agent -> Knowledge Base
+CRM -> Sales Team</textarea>
+            <div class="field-foot"><span>Use <strong>-&gt;</strong> between nodes</span><span id="charCount">0 / 500</span></div>
+            <div id="errorBox" class="error"></div>
+          </section>
+
+          <section class="card">
+            <div class="section-head"><div class="section-title">2. Canvas Preset</div><div class="help">?</div></div>
+            <div class="tile-grid presets">
+              <button class="tile active" type="button" data-preset="1600x900"><span class="tile-title">Horizontal</span><span class="tile-sub">1600 × 900</span></button>
+              <button class="tile" type="button" data-preset="1080x1440"><span class="tile-title">IG Carousel</span><span class="tile-sub">1080 × 1440</span></button>
+              <button class="tile" type="button" data-preset="1080x1080"><span class="tile-title">Square</span><span class="tile-sub">1080 × 1080</span></button>
+              <button class="tile" type="button" data-preset="1080x1920"><span class="tile-title">Story</span><span class="tile-sub">1080 × 1920</span></button>
+              <button class="tile" type="button" data-preset="1400x1400"><span class="tile-title">Post</span><span class="tile-sub">1400 × 1400</span></button>
+              <button class="tile" type="button" data-preset="1920x1080"><span class="tile-title">Deck</span><span class="tile-sub">1920 × 1080</span></button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="section-head"><div class="section-title">3. Theme & Layout</div><div class="help">?</div></div>
+            <div class="tile-grid themes">
+              <button class="tile active" type="button" data-theme="light"><div class="swatch"></div><span class="tile-title">Light</span></button>
+              <button class="tile" type="button" data-theme="neutral"><div class="swatch"></div><span class="tile-title">Neutral</span></button>
+              <button class="tile" type="button" data-theme="minimal"><div class="swatch"></div><span class="tile-title">Minimal</span></button>
+              <button class="tile" type="button" data-theme="dark"><div class="swatch"></div><span class="tile-title">Dark</span></button>
+            </div>
+            <div class="spacer"></div>
+            <div class="grid-2">
+              <div>
+                <label for="layoutMode">Layout mode</label>
+                <select id="layoutMode">
+                  <option value="auto" selected>Auto judge</option>
+                  <option value="horizontal">Force horizontal</option>
+                  <option value="vertical">Force vertical</option>
+                </select>
+              </div>
+              <div>
+                <label for="animationSpeed">Motion speed</label>
+                <div class="range-row">
+                  <input id="animationSpeed" type="range" min="1" max="10" step="1" value="5" />
+                  <div class="range-value" id="speedValue">5</div>
+                </div>
+              </div>
+            </div>
+            <div class="spacer"></div>
+            <label for="circleCount">Flow circle count</label>
+            <div class="range-row">
+              <input id="circleCount" type="range" min="1" max="5" step="1" value="2" />
+              <div class="range-value" id="circleCountValue">2</div>
+            </div>
+            <div class="field-foot"><span>Controls how many pulsing circles appear on each connection</span><span>Lower is cleaner</span></div>
+            <div class="spacer"></div>
+            <label for="subtitleInput">Subtitle</label>
+            <input id="subtitleInput" type="text" value="AUTOMATE. ENGAGE. GROW." />
+            <div class="spacer"></div>
+            <label for="footerInput">Footer note</label>
+            <input id="footerInput" type="text" value="AKALA Tools. Animated system diagram." />
+            <div class="field-foot"><span>Auto uses vertical for portrait/story</span><span id="layoutLabel">Horizontal</span></div>
+            <div class="spacer"></div>
+            <div class="toggle-field">
+              <div class="toggle-copy">
+                <strong>Show node numbers</strong>
+                <span>Display small sequence badges inside nodes.</span>
+              </div>
+              <label class="switch" aria-label="Toggle node numbers">
+                <input id="showNodeNumbers" type="checkbox" checked />
+                <span class="switch-track"></span>
+              </label>
+            </div>
+            <div class="spacer"></div>
+            <div class="section-head"><div class="section-title">Custom Colors</div><div class="help">?</div></div>
+            <div class="color-config">
+              <div class="color-field"><label for="colorPage">Background</label><input id="colorPage" type="color" value="#f4f4f1" /></div>
+              <div class="color-field"><label for="colorCard">Node</label><input id="colorCard" type="color" value="#ffffff" /></div>
+              <div class="color-field"><label for="colorText">Text</label><input id="colorText" type="color" value="#0e0e0e" /></div>
+              <div class="color-field"><label for="colorLine">Line</label><input id="colorLine" type="color" value="#111111" /></div>
+              <div class="color-field"><label for="colorDot">Flow dot</label><input id="colorDot" type="color" value="#111111" /></div>
+              <div class="color-field"><label for="colorMuted">Muted text</label><input id="colorMuted" type="color" value="#666666" /></div>
+            </div>
+            <div class="color-actions">
+              <button class="mini-button" id="resetColorsBtn" type="button">Reset colors</button>
+              <button class="mini-button" id="invertColorsBtn" type="button">Invert canvas</button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="section-head"><div class="section-title">4. Export</div><div class="help">?</div></div>
+            <div class="tile-grid exports">
+              <button class="tile" id="exportPngBtn" type="button"><span class="tile-title">PNG</span><span class="tile-sub">Flat image</span></button>
+              <button class="tile" id="exportSvgBtn" type="button"><span class="tile-title">SVG</span><span class="tile-sub">Animated vector</span></button>
+              <button class="tile" id="exportVideoBtn" type="button"><span class="tile-title">Video</span><span class="tile-sub">MP4/WebM motion</span></button>
+            </div>
+            <div class="spacer"></div>
+            <label for="videoDuration">Video duration</label>
+            <div class="range-row">
+              <input id="videoDuration" type="range" min="3" max="12" step="1" value="6" />
+              <div class="range-value" id="videoDurationValue">6s</div>
+            </div>
+            <div class="field-foot"><span>Export uses selected aspect ratio</span><span id="videoStatus">Ready</span></div>
+          </section>
+
+          <section class="card">
+            <div class="section-head"><div class="section-title">5. Examples</div><div class="help">?</div></div>
+            <div class="example-grid">
+              <button class="example" type="button" data-example="sales">Lead to Loyalty</button>
+              <button class="example" type="button" data-example="support">Support Automation</button>
+              <button class="example" type="button" data-example="rag">RAG Chatbot</button>
+              <button class="example" type="button" data-example="invoice">Invoice Processing</button>
+              <button class="example" type="button" data-example="complex">Complex Branching Test</button>
+            </div>
+          </section>
+        </div>
+      </aside>
+
+      <section class="tool-workspace">
+        <div class="tool-workspace-inner">
+          <div class="canvas-bar">
+            <div class="crumb">Workspace. <strong>Preview Canvas</strong></div>
+            <div class="zoom"><button id="zoomOutBtn" type="button">−</button><span id="zoomLabel">100%</span><button id="zoomInBtn" type="button">+</button><button id="zoomResetBtn" type="button">Fit</button></div>
+          </div>
+          <div class="tool-canvas-wrap"><svg id="diagramSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Animated diagram preview"></svg></div>
+          <div class="status tool-status-row">
+            <div class="status-pills"><span class="tag-pill"><strong id="nodeCount">0</strong> nodes</span><span class="tag-pill"><strong id="edgeCount">0</strong> flows</span><span class="tag-pill">Layout <strong id="directionPill">Horizontal</strong></span><span class="tag-pill">Speed <strong id="speedPill">Normal</strong></span><span class="tag-pill">Circles <strong id="circleCountPill">2</strong></span></div>
+            <div>MotionMap. Pulsing multi-dot flow. Color picker enabled.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>

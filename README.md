@@ -27,79 +27,59 @@ See [`docs/design-system.md`](./docs/design-system.md).
 
 ## Architecture
 
-Current release uses static files only:
+The refactor target is Astro + React islands:
 
 ```txt
-index.html
-apps/
-  agent-persona/
-    index.html
-    styles.css
-    app.js
-  motion-map/
-    index.html
-    styles.css
-    app.js
-assets/
-  brand/
-    akala-mark.svg
-  css/
-    tokens.css
-    base.css
-    components.css
-    gallery.css
-    tools.css
-    tool.css              # legacy compatibility shim
-  js/
-    core/
-docs/
-  design-system.md
-scripts/
-  check-site.mjs
+src/
+  pages/                 # Astro routes
+  layouts/               # shared site/tool shells
+  components/            # shared UI components
+  styles/                # shared CSS tokens and UI styles
+  tools/                 # React tool apps and logic
+public/
+  assets/                # static assets and temporary legacy app copies
 ```
 
-Each tool lives in its own app directory:
+Current routes:
 
 ```txt
-apps/[tool-id]/
-  index.html
-  styles.css
-  app.js
+/                         Homepage
+/tools/agent-persona/     Redirects to legacy Persona Builder during migration
+/tools/motion-map/        Placeholder for rebuilt MotionMap
+/tools/motion-map-v2/     React Flow spike for MotionMap
+/docs/design-system/      Design system page
 ```
 
-Shared styles stay in `assets/css`. Keep app-only behavior and styles beside the app HTML.
+Legacy static apps remain available under `public/apps/` during migration.
 
 ## Local use
 
-Open `index.html` in a browser, or serve the directory:
+Install dependencies and run Astro:
 
 ```bash
-python -m http.server 8080
+npm install
+npm run dev
 ```
 
 Then visit:
 
 ```txt
-http://localhost:8080
+http://localhost:4321
 ```
 
 ## Checks
 
-Run the static site checks before committing UI changes:
+Run the Astro build before committing UI changes:
 
 ```bash
-node scripts/check-site.mjs
+npm run build
 ```
 
-The check verifies:
+Optional type/config check:
 
-- no inline `<style>` blocks
-- no inline `style=` attributes
-- all buttons have explicit `type`
-- tool CSS load order
-- no legacy shell classes in tool pages
-- CSS brace balance
-- app CSS avoids `:root` and global `body` selectors
+```bash
+npm run check
+```
 
 ## Contributing
 

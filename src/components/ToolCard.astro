@@ -1,0 +1,21 @@
+---
+const { href = '#', thumb, category, status = 'Available', statusKind = 'available', title, summary, description, meta, action = 'Open tool' } = Astro.props;
+---
+<article class={`card tool-card ${statusKind}`}>
+  <a class="tool-thumb" href={href} aria-label={`Open ${title}`}>
+    <span>{thumb}</span>
+  </a>
+  <div class="tool-card-body">
+    <div class="tool-meta-row">
+      <span>{category}</span>
+      <span class={`status-pill ${statusKind}`}>{status}</span>
+    </div>
+    <h3>{title}</h3>
+    <p class="tool-summary">{summary}</p>
+    <p>{description}</p>
+    <div class="tool-meta">{meta}</div>
+    <div class="tool-actions">
+      <a class={`btn ${statusKind === 'available' ? 'btn-primary' : 'btn-secondary'}`} href={href}>{action}</a>
+    </div>
+  </div>
+</article>

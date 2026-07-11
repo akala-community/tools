@@ -1,0 +1,34 @@
+---
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/components.css';
+import '../styles/tools.css';
+import Brand from '../components/Brand.astro';
+
+const {
+  title,
+  description = 'Browser-only AKALA tool.',
+  bodyClass = 'tool-page'
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={description} />
+  <title>{title}</title>
+</head>
+<body class={bodyClass}>
+  <main class="tool-shell">
+    <header class="tool-topbar">
+      <Brand className="tool-brand" href="/" title="AKALA Tools" subtitle="Diagram studio. Local-first. Export-ready." />
+      <div class="tool-actions">
+        <a class="btn btn-secondary" href="/">Home</a>
+        <slot name="top-actions" />
+      </div>
+    </header>
+    <slot />
+  </main>
+</body>
+</html>

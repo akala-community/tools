@@ -1,0 +1,55 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import '../../styles/gallery.css';
+---
+<SiteLayout title="Design System - AKALA Tools" description="AKALA Tools design system notes.">
+  <main class="doc-page">
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Design system.</h1>
+        <p>Warm light UI system for small, browser-only utilities.</p>
+      </div>
+    </section>
+    <section class="card doc-card">
+      <h2>Product feel</h2>
+      <ul>
+        <li>light, calm, and production-grade</li>
+        <li>premium without looking like a heavy SaaS dashboard</li>
+        <li>clear hierarchy over decoration</li>
+        <li>useful in under ten seconds</li>
+        <li>export/copy actions always obvious</li>
+      </ul>
+      <h2>Core tokens</h2>
+      <pre><code>--bg: #f7f4ee;
+--bg-2: #fffaf1;
+--paper: #ffffff;
+--ink: #17130d;
+--muted: #756d62;
+--line: #e4dccf;
+--gold: #d99b29;</code></pre>
+      <p>Full source remains in <code>docs/design-system.md</code> during the migration.</p>
+    </section>
+  </main>
+</SiteLayout>
+
+<style>
+  .doc-card {
+    padding: 28px;
+    margin-bottom: 34px;
+    line-height: 1.65;
+  }
+  .doc-card h2 {
+    margin: 0 0 12px;
+    letter-spacing: -.04em;
+  }
+  .doc-card h2:not(:first-child) {
+    margin-top: 28px;
+  }
+  .doc-card pre {
+    overflow: auto;
+    padding: 18px;
+    border-radius: 16px;
+    background: var(--ink);
+    color: var(--accent-ink);
+  }
+</style>

@@ -1,0 +1,39 @@
+:root {
+  color-scheme: light;
+
+  --bg: #f7f4ee;
+  --bg-2: #fffaf1;
+  --paper: #ffffff;
+  --paper-warm: #fffdf8;
+  --ink: #17130d;
+  --ink-soft: #30291f;
+  --muted: #756d62;
+  --dim: #9a9185;
+  --soft: #f1ece3;
+  --soft-2: #ebe4d8;
+  --line: #e4dccf;
+  --line-strong: #d5cab9;
+
+  --accent: #17130d;
+  --accent-ink: #ffffff;
+  --gold: #d99b29;
+  --gold-ink: #8a620f;
+  --gold-soft: #fff0c7;
+  --green: #23845b;
+  --green-soft: #e8f6ef;
+  --blue: #315f9f;
+  --blue-soft: #eaf1ff;
+
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 30px;
+  --radius-2xl: 42px;
+
+  --shadow-soft: 0 18px 50px rgba(42, 31, 16, .08);
+  --shadow-card: 0 24px 80px rgba(42, 31, 16, .10);
+  --shadow-lift: 0 34px 100px rgba(42, 31, 16, .14);
+
+  --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}

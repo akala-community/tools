@@ -1,0 +1,3 @@
+/* Compatibility layer for existing single-file tools.
+   New tools should load assets/css/tools.css, then a per-tool stylesheet if needed. */
+@import url('./tools.css');
