@@ -243,11 +243,27 @@
   stroke-width: 5;
   stroke-dasharray: 14 14;
 }
-.edge-motion {
+.edge-flow,
+.edge-draw,
+.edge-static {
   stroke: #315f9f;
   stroke-width: 4;
+}
+.edge-flow {
   stroke-dasharray: 14 14;
   animation: flowclip-dash .9s linear infinite;
+}
+.edge-draw {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: flowclip-draw 2.4s ease-in-out infinite;
+}
+.edge-static {
+  stroke-dasharray: none;
+}
+.edge-dot {
+  fill: #315f9f;
+  filter: drop-shadow(0 0 10px rgba(49,95,159,.35));
 }
 .arrow-head { fill: #315f9f; }
 .edge-label {
@@ -265,7 +281,10 @@
 .theme-dark .node-card { fill: rgba(15,23,42,.92); stroke: rgba(148,163,184,.45); }
 .theme-dark .node-label { fill: #f8fafc; }
 .theme-dark .edge-base { stroke: rgba(148,163,184,.22); }
-.theme-dark .edge-motion { stroke: #60a5fa; filter: drop-shadow(0 0 12px rgba(96,165,250,.5)); }
+.theme-dark .edge-flow,
+.theme-dark .edge-draw,
+.theme-dark .edge-static { stroke: #60a5fa; filter: drop-shadow(0 0 12px rgba(96,165,250,.5)); }
+.theme-dark .edge-dot { fill: #60a5fa; filter: drop-shadow(0 0 12px rgba(96,165,250,.5)); }
 .theme-dark .arrow-head { fill: #60a5fa; }
 .theme-dark .edge-label { fill: #bfdbfe; }
 
@@ -281,21 +300,25 @@
   stroke-dasharray: 9 5;
 }
 .theme-sketch .edge-base { stroke: rgba(23,19,13,.16); }
-.theme-sketch .edge-motion {
+.theme-sketch .edge-flow,
+.theme-sketch .edge-draw,
+.theme-sketch .edge-static {
   stroke: #17130d;
   stroke-width: 6;
   stroke-dasharray: 12 10;
 }
+.theme-sketch .edge-dot { fill: #17130d; }
 .theme-sketch .arrow-head { fill: #17130d; }
 
-.animation-reveal .node,
-.animation-pulse .node {
+.animation-flow .node,
+.animation-draw .node,
+.animation-dot .node,
+.animation-none .node {
   opacity: 1;
 }
 
-.animation-reveal .edge-motion,
-.animation-pulse .edge-motion {
-  animation: flowclip-dash .9s linear infinite;
+.animation-none .edge-base {
+  stroke-dasharray: none;
 }
 
 .flowclip-export {
@@ -321,6 +344,12 @@
 
 @keyframes flowclip-dash {
   to { stroke-dashoffset: -28; }
+}
+
+@keyframes flowclip-draw {
+  0% { stroke-dashoffset: 1000; opacity: 1; }
+  58%, 78% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: .28; }
 }
 
 @media (max-width: 980px) {

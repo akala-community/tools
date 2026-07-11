@@ -4,7 +4,7 @@ import dagre from 'dagre';
 
 type RatioKey = 'portrait' | 'square' | 'short' | 'landscape';
 type ThemeKey = 'clean' | 'dark' | 'sketch';
-type AnimationKey = 'reveal' | 'pulse';
+type AnimationKey = 'flow' | 'draw' | 'dot' | 'none';
 
 type Node = {
   id: string;
@@ -80,8 +80,10 @@ const THEMES: Record<ThemeKey, { label: string }> = {
 };
 
 const ANIMATIONS: Record<AnimationKey, { label: string }> = {
-  reveal: { label: 'Step reveal' },
-  pulse: { label: 'Flow pulse' },
+  flow: { label: 'Flowing dashed' },
+  draw: { label: 'Draw path' },
+  dot: { label: 'Pulse dot' },
+  none: { label: 'No motion' },
 };
 
 function cleanToken(value: string) {
@@ -141,6 +143,37 @@ function getSmoothCurve(start: { x: number; y: number }, end: { x: number; y: nu
   const path = `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${end.x} ${end.y}`;
   const angle = Math.atan2(end.y - c2.y, end.x - c2.x);
   return { c1, c2, path, angle };
+}
+
+function cubicPoint(
+  start: { x: number; y: number },
+  c1: { x: number; y: number },
+  c2: { x: number; y: number },
+  end: { x: number; y: number },
+  t: number
+) {
+  const mt = 1 - t;
+  return {
+    x: mt ** 3 * start.x + 3 * mt ** 2 * t * c1.x + 3 * mt * t ** 2 * c2.x + t ** 3 * end.x,
+    y: mt ** 3 * start.y + 3 * mt ** 2 * t * c1.y + 3 * mt * t ** 2 * c2.y + t ** 3 * end.y,
+  };
+}
+
+function drawCubicSegment(
+  ctx: CanvasRenderingContext2D,
+  start: { x: number; y: number },
+  c1: { x: number; y: number },
+  c2: { x: number; y: number },
+  end: { x: number; y: number },
+  progress: number
+) {
+  const steps = Math.max(2, Math.ceil(42 * Math.max(0.02, Math.min(1, progress))));
+  ctx.beginPath();
+  ctx.moveTo(start.x, start.y);
+  for (let i = 1; i <= steps; i += 1) {
+    const point = cubicPoint(start, c1, c2, end, (i / steps) * progress);
+    ctx.lineTo(point.x, point.y);
+  }
 }
 
 function roundedRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
@@ -302,7 +335,7 @@ export default function FlowClipApp() {
   const [subtitle, setSubtitle] = useState('Made with FlowClip');
   const [ratio, setRatio] = useState<RatioKey>('portrait');
   const [theme, setTheme] = useState<ThemeKey>('clean');
-  const [animation, setAnimation] = useState<AnimationKey>('reveal');
+  const [animation, setAnimation] = useState<AnimationKey>('flow');
   const [duration, setDuration] = useState(6);
   const [status, setStatus] = useState('Ready.');
   const exportRef = useRef<HTMLDivElement>(null);
@@ -318,6 +351,7 @@ export default function FlowClipApp() {
       if (data.ratio && RATIOS[data.ratio as RatioKey]) setRatio(data.ratio);
       if (data.theme && THEMES[data.theme as ThemeKey]) setTheme(data.theme);
       if (data.animation && ANIMATIONS[data.animation as AnimationKey]) setAnimation(data.animation);
+      else if (data.animation === 'reveal' || data.animation === 'pulse') setAnimation('flow');
       if (typeof data.duration === 'number') setDuration(data.duration);
     } catch {
       // Ignore corrupt local saves.
@@ -414,7 +448,7 @@ export default function FlowClipApp() {
           ? { bg: '#fbf3df', title: '#17130d', sub: '#756d62', node: '#fffaf1', nodeStroke: '#17130d', text: '#17130d', base: 'rgba(23,19,13,.18)', edge: '#17130d' }
           : { bg: '#fffaf1', title: '#17130d', sub: '#756d62', node: '#ffffff', nodeStroke: '#d5cab9', text: '#17130d', base: 'rgba(23,19,13,.16)', edge: '#315f9f' };
 
-      const drawArrow = (x: number, y: number, angle: number) => {
+      const drawArrow = (x: number, y: number, angle: number, color = colors.edge) => {
         const size = 15;
         ctx.save();
         ctx.translate(x, y);
@@ -424,7 +458,7 @@ export default function FlowClipApp() {
         ctx.lineTo(-size, -size * 0.45);
         ctx.lineTo(-size, size * 0.45);
         ctx.closePath();
-        ctx.fillStyle = colors.edge;
+        ctx.fillStyle = color;
         ctx.fill();
         ctx.restore();
       };
@@ -453,27 +487,43 @@ export default function FlowClipApp() {
           const end = getRectBoundaryPoint(to, from);
           const curve = getSmoothCurve(start, end, isVertical);
 
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
           ctx.beginPath();
           ctx.moveTo(start.x, start.y);
           ctx.bezierCurveTo(curve.c1.x, curve.c1.y, curve.c2.x, curve.c2.y, end.x, end.y);
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-          ctx.setLineDash([14, 14]);
+          ctx.setLineDash(animation === 'none' || animation === 'dot' ? [] : [14, 14]);
           ctx.lineDashOffset = 0;
           ctx.strokeStyle = colors.base;
           ctx.lineWidth = 5;
           ctx.stroke();
 
-          ctx.beginPath();
-          ctx.moveTo(start.x, start.y);
-          ctx.bezierCurveTo(curve.c1.x, curve.c1.y, curve.c2.x, curve.c2.y, end.x, end.y);
-          ctx.lineDashOffset = -progress * 84;
-          ctx.strokeStyle = colors.edge;
-          ctx.lineWidth = 4;
-          ctx.stroke();
+          if (animation === 'draw') {
+            drawCubicSegment(ctx, start, curve.c1, curve.c2, end, Math.min(1, progress / Math.max(0.1, duration)));
+            ctx.setLineDash([]);
+            ctx.strokeStyle = colors.edge;
+            ctx.lineWidth = 4;
+            ctx.stroke();
+          } else if (animation === 'dot') {
+            const dot = cubicPoint(start, curve.c1, curve.c2, end, (progress * 0.28 + edge.order * 0.18) % 1);
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.arc(dot.x, dot.y, 13, 0, Math.PI * 2);
+            ctx.fillStyle = colors.edge;
+            ctx.fill();
+          } else if (animation === 'flow') {
+            ctx.beginPath();
+            ctx.moveTo(start.x, start.y);
+            ctx.bezierCurveTo(curve.c1.x, curve.c1.y, curve.c2.x, curve.c2.y, end.x, end.y);
+            ctx.setLineDash([14, 14]);
+            ctx.lineDashOffset = -progress * 84;
+            ctx.strokeStyle = colors.edge;
+            ctx.lineWidth = 4;
+            ctx.stroke();
+          }
           ctx.setLineDash([]);
 
-          drawArrow(end.x, end.y, curve.angle);
+          drawArrow(end.x, end.y, curve.angle, animation === 'none' ? colors.base : colors.edge);
         });
 
         placed.forEach((node) => {
@@ -613,7 +663,7 @@ export default function FlowClipApp() {
               className={`flowclip-stage theme-${theme} animation-${animation}`}
               style={{ aspectRatio: `${ratioInfo.width} / ${ratioInfo.height}` }}
             >
-              <DiagramCanvas flow={parsed} title={displayTitle} subtitle={displaySubtitle} ratio={ratio} duration={duration} />
+              <DiagramCanvas flow={parsed} title={displayTitle} subtitle={displaySubtitle} ratio={ratio} animation={animation} duration={duration} />
             </div>
           </div>
 
@@ -631,7 +681,7 @@ export default function FlowClipApp() {
   );
 }
 
-function DiagramCanvas({ flow, title, subtitle, ratio, duration }: { flow: ParsedFlow; title: string; subtitle: string; ratio: RatioKey; duration: number }) {
+function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { flow: ParsedFlow; title: string; subtitle: string; ratio: RatioKey; animation: AnimationKey; duration: number }) {
   const viewBox = ratio === 'landscape' ? { width: 1600, height: 900 } : ratio === 'square' ? { width: 1080, height: 1080 } : { width: 1080, height: ratio === 'short' ? 1920 : 1440 };
   const isVertical = getLayoutDirection(ratio, flow.nodes.length) === 'TB';
   const padX = viewBox.width * (isVertical ? 0.12 : 0.08);
@@ -685,8 +735,17 @@ function DiagramCanvas({ flow, title, subtitle, ratio, duration }: { flow: Parse
           const path = curve.path;
           return (
             <g key={edge.id} className="edge" style={{ ['--i' as string]: edge.order, ['--dur' as string]: `${duration}s` }}>
-              <path className="edge-path edge-base" d={path} />
-              <path className="edge-path edge-motion" d={path} markerEnd="url(#flowclip-arrow)" />
+              <path className="edge-path edge-base" d={path} markerEnd={animation === 'none' ? 'url(#flowclip-arrow)' : undefined} />
+              {animation === 'draw' && <path className="edge-path edge-draw" d={path} markerEnd="url(#flowclip-arrow)" />}
+              {animation === 'flow' && <path className="edge-path edge-flow" d={path} markerEnd="url(#flowclip-arrow)" />}
+              {animation === 'dot' && (
+                <>
+                  <path className="edge-path edge-static" d={path} markerEnd="url(#flowclip-arrow)" />
+                  <circle className="edge-dot" r="13">
+                    <animateMotion dur="3.2s" repeatCount="indefinite" begin={`${edge.order * 0.35}s`} path={path} />
+                  </circle>
+                </>
+              )}
               {edge.label && <text className="edge-label" x={midX} y={midY - 18} textAnchor="middle">{edge.label}</text>}
             </g>
           );

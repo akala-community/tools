@@ -14,6 +14,7 @@
 - Increased FlowClip node label size, reduced social canvas padding, and smoothed connectors with directional Bézier handles for more production-grade flow lines.
 - Fixed FlowClip browser compatibility by restoring Dagre's default import shape and replacing canvas `roundRect()` with a manual rounded-rectangle path.
 - Added FlowClip title and subtitle controls with local autosave and export support.
+- Added FlowClip motion modes for flowing dashed arrows, draw path, pulse dot, and static/no motion, with matching SVG preview and WebM export behavior.
 - Verified `npm run build` passes after FlowClip changes.
 
 ## 2026-07-08
