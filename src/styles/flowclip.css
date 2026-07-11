@@ -147,6 +147,10 @@
   padding: 14px;
 }
 
+.flowclip-control-wide {
+  grid-column: span 2;
+}
+
 .flowclip-controls label {
   display: grid;
   gap: 6px;

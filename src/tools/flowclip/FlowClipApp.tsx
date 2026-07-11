@@ -298,6 +298,8 @@ function safeFileName(name: string) {
 
 export default function FlowClipApp() {
   const [text, setText] = useState(STARTER_TEXT);
+  const [customTitle, setCustomTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('Made with FlowClip');
   const [ratio, setRatio] = useState<RatioKey>('portrait');
   const [theme, setTheme] = useState<ThemeKey>('clean');
   const [animation, setAnimation] = useState<AnimationKey>('reveal');
@@ -311,6 +313,8 @@ export default function FlowClipApp() {
     try {
       const data = JSON.parse(saved);
       if (typeof data.text === 'string') setText(data.text);
+      if (typeof data.customTitle === 'string') setCustomTitle(data.customTitle);
+      if (typeof data.subtitle === 'string') setSubtitle(data.subtitle);
       if (data.ratio && RATIOS[data.ratio as RatioKey]) setRatio(data.ratio);
       if (data.theme && THEMES[data.theme as ThemeKey]) setTheme(data.theme);
       if (data.animation && ANIMATIONS[data.animation as AnimationKey]) setAnimation(data.animation);
@@ -321,12 +325,14 @@ export default function FlowClipApp() {
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem('flowclip:v1', JSON.stringify({ text, ratio, theme, animation, duration }));
-  }, [text, ratio, theme, animation, duration]);
+    window.localStorage.setItem('flowclip:v1', JSON.stringify({ text, customTitle, subtitle, ratio, theme, animation, duration }));
+  }, [text, customTitle, subtitle, ratio, theme, animation, duration]);
 
   const parsed = useMemo(() => parseFlowText(text, ratio), [text, ratio]);
+  const displayTitle = customTitle.trim() || parsed.title;
+  const displaySubtitle = subtitle.trim();
   const ratioInfo = RATIOS[ratio];
-  const fileBase = safeFileName(parsed.title);
+  const fileBase = safeFileName(displayTitle);
 
   async function exportPng() {
     if (!exportRef.current) return;
@@ -432,10 +438,12 @@ export default function FlowClipApp() {
         ctx.textAlign = 'center';
         ctx.fillStyle = colors.title;
         ctx.font = '900 54px Inter, system-ui, sans-serif';
-        ctx.fillText(parsed.title, viewBox.width / 2, viewBox.height * 0.11);
-        ctx.fillStyle = colors.sub;
-        ctx.font = '800 19px Inter, system-ui, sans-serif';
-        ctx.fillText('Made with FlowClip', viewBox.width / 2, viewBox.height * 0.15);
+        ctx.fillText(displayTitle, viewBox.width / 2, viewBox.height * 0.11);
+        if (displaySubtitle) {
+          ctx.fillStyle = colors.sub;
+          ctx.font = '800 19px Inter, system-ui, sans-serif';
+          ctx.fillText(displaySubtitle, viewBox.width / 2, viewBox.height * 0.15);
+        }
 
         parsed.edges.forEach((edge) => {
           const from = placedById.get(edge.from);
@@ -567,6 +575,14 @@ export default function FlowClipApp() {
 
         <main className="flowclip-workspace">
           <div className="flowclip-controls panel">
+            <label className="flowclip-control-wide">
+              Title
+              <input type="text" value={customTitle} placeholder={parsed.title} onChange={(event) => setCustomTitle(event.target.value)} />
+            </label>
+            <label className="flowclip-control-wide">
+              Subtitle
+              <input type="text" value={subtitle} placeholder="Optional subtitle" onChange={(event) => setSubtitle(event.target.value)} />
+            </label>
             <label>
               Ratio
               <select value={ratio} onChange={(event) => setRatio(event.target.value as RatioKey)}>
@@ -597,7 +613,7 @@ export default function FlowClipApp() {
               className={`flowclip-stage theme-${theme} animation-${animation}`}
               style={{ aspectRatio: `${ratioInfo.width} / ${ratioInfo.height}` }}
             >
-              <DiagramCanvas flow={parsed} ratio={ratio} duration={duration} />
+              <DiagramCanvas flow={parsed} title={displayTitle} subtitle={displaySubtitle} ratio={ratio} duration={duration} />
             </div>
           </div>
 
@@ -615,7 +631,7 @@ export default function FlowClipApp() {
   );
 }
 
-function DiagramCanvas({ flow, ratio, duration }: { flow: ParsedFlow; ratio: RatioKey; duration: number }) {
+function DiagramCanvas({ flow, title, subtitle, ratio, duration }: { flow: ParsedFlow; title: string; subtitle: string; ratio: RatioKey; duration: number }) {
   const viewBox = ratio === 'landscape' ? { width: 1600, height: 900 } : ratio === 'square' ? { width: 1080, height: 1080 } : { width: 1080, height: ratio === 'short' ? 1920 : 1440 };
   const isVertical = getLayoutDirection(ratio, flow.nodes.length) === 'TB';
   const padX = viewBox.width * (isVertical ? 0.12 : 0.08);
@@ -637,7 +653,7 @@ function DiagramCanvas({ flow, ratio, duration }: { flow: ParsedFlow; ratio: Rat
   const placedById = new Map(placed.map((node) => [node.id, node]));
 
   return (
-    <svg viewBox={`0 0 ${viewBox.width} ${viewBox.height}`} role="img" aria-label={flow.title}>
+    <svg viewBox={`0 0 ${viewBox.width} ${viewBox.height}`} role="img" aria-label={title}>
       <defs>
         <marker id="flowclip-arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
           <path d="M1.5,1.5 L8,4 L1.5,6.5 Z" className="arrow-head" />
@@ -649,8 +665,8 @@ function DiagramCanvas({ flow, ratio, duration }: { flow: ParsedFlow; ratio: Rat
 
       <rect className="stage-bg" width="100%" height="100%" rx="0" />
 
-      <text className="diagram-title" x={viewBox.width / 2} y={viewBox.height * 0.11} textAnchor="middle">{flow.title}</text>
-      <text className="diagram-subtitle" x={viewBox.width / 2} y={viewBox.height * 0.15} textAnchor="middle">Made with FlowClip</text>
+      <text className="diagram-title" x={viewBox.width / 2} y={viewBox.height * 0.11} textAnchor="middle">{title}</text>
+      {subtitle && <text className="diagram-subtitle" x={viewBox.width / 2} y={viewBox.height * 0.15} textAnchor="middle">{subtitle}</text>}
 
       <g className="edges">
         {flow.edges.map((edge) => {
