@@ -17,6 +17,7 @@
 - Added FlowClip motion modes for flowing dashed arrows, draw path, pulse dot, and static/no motion, with matching SVG preview and WebM export behavior.
 - Fixed FlowClip connector ports and arrowheads so lines start from node edge centers and arrows match connector tangent.
 - Verified `npm run build` passes after FlowClip changes.
+- Hardened FlowClip exports with duplicate-export locking, PNG/SVG failure handling, MediaRecorder/storage guards, clamped duration input, accessible status/warnings, and unique SVG filter ids.
 
 ## 2026-07-08
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { toPng, toSvg } from 'html-to-image';
 import dagre from 'dagre';
 
@@ -339,6 +339,11 @@ function safeFileName(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'flowclip';
 }
 
+function clampDuration(value: number) {
+  if (!Number.isFinite(value)) return 6;
+  return Math.min(20, Math.max(3, value));
+}
+
 export default function FlowClipApp() {
   const [text, setText] = useState(STARTER_TEXT);
   const [customTitle, setCustomTitle] = useState('');
@@ -348,12 +353,13 @@ export default function FlowClipApp() {
   const [animation, setAnimation] = useState<AnimationKey>('flow');
   const [duration, setDuration] = useState(6);
   const [status, setStatus] = useState('Ready.');
+  const [isExporting, setIsExporting] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const saved = window.localStorage.getItem('flowclip:v1');
-    if (!saved) return;
     try {
+      const saved = window.localStorage.getItem('flowclip:v1');
+      if (!saved) return;
       const data = JSON.parse(saved);
       if (typeof data.text === 'string') setText(data.text);
       if (typeof data.customTitle === 'string') setCustomTitle(data.customTitle);
@@ -362,14 +368,18 @@ export default function FlowClipApp() {
       if (data.theme && THEMES[data.theme as ThemeKey]) setTheme(data.theme);
       if (data.animation && ANIMATIONS[data.animation as AnimationKey]) setAnimation(data.animation);
       else if (data.animation === 'reveal' || data.animation === 'pulse') setAnimation('flow');
-      if (typeof data.duration === 'number') setDuration(data.duration);
+      if (typeof data.duration === 'number') setDuration(clampDuration(data.duration));
     } catch {
-      // Ignore corrupt local saves.
+      // Ignore unavailable storage or corrupt local saves.
     }
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem('flowclip:v1', JSON.stringify({ text, customTitle, subtitle, ratio, theme, animation, duration }));
+    try {
+      window.localStorage.setItem('flowclip:v1', JSON.stringify({ text, customTitle, subtitle, ratio, theme, animation, duration }));
+    } catch {
+      // Ignore unavailable storage or quota errors.
+    }
   }, [text, customTitle, subtitle, ratio, theme, animation, duration]);
 
   const parsed = useMemo(() => parseFlowText(text, ratio), [text, ratio]);
@@ -379,33 +389,58 @@ export default function FlowClipApp() {
   const fileBase = safeFileName(displayTitle);
 
   async function exportPng() {
-    if (!exportRef.current) return;
+    if (!exportRef.current || isExporting) return;
+    setIsExporting(true);
     setStatus('Exporting PNG…');
-    const dataUrl = await toPng(exportRef.current, {
-      cacheBust: true,
-      pixelRatio: 2,
-      backgroundColor: theme === 'dark' ? '#080b13' : '#fffaf1',
-    });
-    downloadDataUrl(dataUrl, `${fileBase}.png`);
-    setStatus('PNG exported.');
+    try {
+      const dataUrl = await toPng(exportRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: theme === 'dark' ? '#080b13' : '#fffaf1',
+      });
+      downloadDataUrl(dataUrl, `${fileBase}.png`);
+      setStatus('PNG exported.');
+    } catch (error) {
+      console.error(error);
+      setStatus('PNG export failed. Try a smaller flow or another browser.');
+    } finally {
+      setIsExporting(false);
+    }
   }
 
   async function exportSvg() {
-    if (!exportRef.current) return;
+    if (!exportRef.current || isExporting) return;
+    setIsExporting(true);
     setStatus('Exporting SVG…');
-    const dataUrl = await toSvg(exportRef.current, { cacheBust: true });
-    downloadDataUrl(dataUrl, `${fileBase}.svg`);
-    setStatus('SVG exported.');
+    try {
+      const dataUrl = await toSvg(exportRef.current, { cacheBust: true });
+      downloadDataUrl(dataUrl, `${fileBase}.svg`);
+      setStatus('SVG exported.');
+    } catch (error) {
+      console.error(error);
+      setStatus('SVG export failed. Try a smaller flow or another browser.');
+    } finally {
+      setIsExporting(false);
+    }
   }
 
   async function exportWebm() {
+    if (isExporting) return;
+    setIsExporting(true);
     setStatus('Recording WebM…');
 
     try {
+      if (typeof MediaRecorder === 'undefined') {
+        setStatus('Video export is not supported in this browser. Try Chrome or Edge.');
+        setIsExporting(false);
+        return;
+      }
+
       const mimeType = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm']
         .find((type) => MediaRecorder.isTypeSupported(type));
       if (!mimeType) {
         setStatus('Video export is not supported in this browser. Try Chrome or Edge.');
+        setIsExporting(false);
         return;
       }
 
@@ -414,14 +449,22 @@ export default function FlowClipApp() {
       canvas.width = Math.round(ratioInfo.width * scale);
       canvas.height = Math.round(ratioInfo.height * scale);
       const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+      if (!ctx) {
+        setStatus('Video export failed. Canvas is not available.');
+        setIsExporting(false);
+        return;
+      }
 
       const stream = canvas.captureStream(30);
       const recorder = new MediaRecorder(stream, { mimeType });
       const chunks: BlobPart[] = [];
       recorder.ondataavailable = (event) => event.data.size && chunks.push(event.data);
-      recorder.onerror = () => setStatus('Video export failed while recording.');
+      recorder.onerror = () => {
+        setStatus('Video export failed while recording.');
+        setIsExporting(false);
+      };
       recorder.onstop = () => {
+        setIsExporting(false);
         if (!chunks.length) {
           setStatus('Video export failed. No video data was recorded.');
           return;
@@ -579,6 +622,7 @@ export default function FlowClipApp() {
     } catch (error) {
       console.error(error);
       setStatus('Video export failed. Try Chrome or Edge.');
+      setIsExporting(false);
     }
   }
 
@@ -592,7 +636,7 @@ export default function FlowClipApp() {
         </div>
         <div className="flowclip-hero-actions">
           <button className="tool-btn" onClick={() => setText(EXAMPLES[0].value)}>Reset example</button>
-          <button className="tool-btn tool-btn-primary" onClick={exportWebm}>Export video</button>
+          <button className="tool-btn tool-btn-primary" onClick={exportWebm} disabled={isExporting}>Export video</button>
         </div>
       </section>
 
@@ -626,7 +670,7 @@ export default function FlowClipApp() {
           </div>
 
           {parsed.warnings.length > 0 && (
-            <div className="flowclip-warnings">
+            <div className="flowclip-warnings" role="alert">
               {parsed.warnings.map((warning) => <p key={warning}>{warning}</p>)}
             </div>
           )}
@@ -662,7 +706,7 @@ export default function FlowClipApp() {
             </label>
             <label>
               Seconds
-              <input type="number" min="3" max="20" value={duration} onChange={(event) => setDuration(Number(event.target.value) || 6)} />
+              <input type="number" min="3" max="20" value={duration} onChange={(event) => setDuration(clampDuration(Number(event.target.value)))} />
             </label>
           </div>
 
@@ -677,11 +721,11 @@ export default function FlowClipApp() {
           </div>
 
           <div className="flowclip-export panel">
-            <span>{status}</span>
+            <span aria-live="polite">{status}</span>
             <div>
-              <button className="tool-btn" onClick={exportPng}>PNG</button>
-              <button className="tool-btn" onClick={exportSvg}>SVG</button>
-              <button className="tool-btn tool-btn-primary" onClick={exportWebm}>WebM video</button>
+              <button className="tool-btn" onClick={exportPng} disabled={isExporting}>PNG</button>
+              <button className="tool-btn" onClick={exportSvg} disabled={isExporting}>SVG</button>
+              <button className="tool-btn tool-btn-primary" onClick={exportWebm} disabled={isExporting}>WebM video</button>
             </div>
           </div>
         </main>
@@ -691,6 +735,7 @@ export default function FlowClipApp() {
 }
 
 function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { flow: ParsedFlow; title: string; subtitle: string; ratio: RatioKey; animation: AnimationKey; duration: number }) {
+  const shadowId = useId();
   const viewBox = ratio === 'landscape' ? { width: 1600, height: 900 } : ratio === 'square' ? { width: 1080, height: 1080 } : { width: 1080, height: ratio === 'short' ? 1920 : 1440 };
   const isVertical = getLayoutDirection(ratio, flow.nodes.length) === 'TB';
   const padX = viewBox.width * (isVertical ? 0.12 : 0.08);
@@ -713,8 +758,10 @@ function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { 
 
   return (
     <svg viewBox={`0 0 ${viewBox.width} ${viewBox.height}`} role="img" aria-label={title}>
+      <title>{title}</title>
+      <desc>{subtitle || 'Animated flow diagram made from arrow syntax.'}</desc>
       <defs>
-        <filter id="flowclip-soft-shadow" x="-30%" y="-30%" width="160%" height="180%">
+        <filter id={shadowId} x="-30%" y="-30%" width="160%" height="180%">
           <feDropShadow dx="0" dy="18" stdDeviation="18" floodOpacity="0.18" />
         </filter>
       </defs>
@@ -761,7 +808,7 @@ function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { 
       <g className="nodes">
         {placed.map((node) => (
           <g key={node.id} className="node" transform={`translate(${node.px - node.width / 2} ${node.py - node.height / 2})`} style={{ ['--i' as string]: node.level }}>
-            <rect className="node-card" width={node.width} height={node.height} rx={Math.min(28, node.height / 3)} filter="url(#flowclip-soft-shadow)" />
+            <rect className="node-card" width={node.width} height={node.height} rx={Math.min(28, node.height / 3)} filter={`url(#${shadowId})`} />
             <text className="node-label" x={node.width / 2} y={node.height / 2 - ((node.lines.length - 1) * 21 * sizeScale) + 10 * sizeScale} textAnchor="middle">
               {node.lines.map((line, index) => (
                 <tspan key={`${node.id}-${index}`} x={node.width / 2} dy={index === 0 ? 0 : 42 * sizeScale}>{line}</tspan>

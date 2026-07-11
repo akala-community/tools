@@ -345,6 +345,11 @@
   justify-content: flex-end;
 }
 
+.flowclip-app button:disabled {
+  cursor: progress;
+  opacity: .58;
+}
+
 @keyframes flowclip-dash {
   to { stroke-dashoffset: -28; }
 }
