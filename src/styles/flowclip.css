@@ -210,6 +210,10 @@
   height: 100%;
 }
 
+.flowclip-file-input {
+  display: none;
+}
+
 .stage-bg { fill: #fffaf1; }
 .bg-orb { display: none; }
 .diagram-title {

@@ -18,6 +18,10 @@
 - Fixed FlowClip connector ports and arrowheads so lines start from node edge centers and arrows match connector tangent.
 - Verified `npm run build` passes after FlowClip changes.
 - Hardened FlowClip exports with duplicate-export locking, PNG/SVG failure handling, MediaRecorder/storage guards, clamped duration input, accessible status/warnings, and unique SVG filter ids.
+- Updated FlowClip PNG, SVG, and WebM exports to use exact selected social dimensions in filenames and status labels.
+- Fixed FlowClip PNG export by using a hidden fixed-size render target and added project JSON export/import controls.
+- Fixed blank FlowClip PNG/SVG exports by capturing the visible preview again and scaling PNG output to the selected social width.
+- Replaced FlowClip PNG export with the shared canvas renderer, added blank-image detection, reused the renderer for WebM frames, pinned package versions, and added `@astrojs/check` so `npm run check` runs non-interactively.
 
 ## 2026-07-08
 
