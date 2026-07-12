@@ -25,6 +25,7 @@
 - Hardened FlowClip project imports with file-size and field-length limits, added export size guards for very large diagrams, and added GitHub Actions CI for check/build.
 - Replaced FlowClip SVG export with direct SVG serialization and embedded styles instead of DOM screenshot conversion.
 - Added Netlify deployment configuration, site-specific deploy scripts, and ignored local Netlify state.
+- Added MotionMap v2 animated edge styling and a custom edge component for the React Flow spike.
 
 ## 2026-07-08
 

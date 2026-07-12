@@ -127,6 +127,32 @@
   font-weight: 720;
 }
 
+.react-flow__edges {
+  z-index: 2;
+}
+
+.react-flow__nodes {
+  z-index: 3;
+}
+
+.react-flow__edge-path {
+  stroke: #17130d !important;
+  stroke-width: 3.4 !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 3px 8px rgba(23, 19, 13, .18));
+}
+
+.react-flow__edge.animated .react-flow__edge-path {
+  stroke-dasharray: 14 9;
+  animation-duration: .65s;
+}
+
+.react-flow__arrowhead polyline,
+.react-flow__arrowhead path {
+  fill: #17130d !important;
+  stroke: #17130d !important;
+}
+
 .motion-node {
   display: grid;
   place-items: center;
@@ -165,15 +191,45 @@
 }
 
 .motion-handle {
-  width: 9px !important;
-  height: 9px !important;
+  width: 14px !important;
+  height: 14px !important;
   border: 2px solid var(--paper) !important;
   background: var(--ink) !important;
+  opacity: 1 !important;
+  z-index: 10 !important;
 }
 
-.react-flow__edge.animated path {
-  stroke-dasharray: 10;
-  animation-duration: .7s;
+.motion-edge {
+  pointer-events: visibleStroke;
+}
+
+.motion-edge-bg {
+  filter: drop-shadow(0 3px 8px rgba(23, 19, 13, .14));
+}
+
+.motion-edge-dash {
+  stroke-dasharray: 14 9;
+  animation: motion-edge-flow .7s linear infinite;
+}
+
+.motion-edge-dot,
+.motion-edge-ring {
+  pointer-events: none;
+}
+
+.motion-edge-ring {
+  animation: motion-edge-ring 1s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes motion-edge-flow {
+  to { stroke-dashoffset: -22; }
+}
+
+@keyframes motion-edge-ring {
+  0%, 100% { opacity: .16; }
+  50% { opacity: .42; }
 }
 
 .react-flow__controls,

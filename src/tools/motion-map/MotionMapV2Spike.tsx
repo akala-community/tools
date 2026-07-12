@@ -1,6 +1,6 @@
 import '@xyflow/react/dist/style.css';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { ReactFlow, Background, Controls, MiniMap, type Edge, type Node, useEdgesState, useNodesState } from '@xyflow/react';
+import { ReactFlow, Background, Controls, MarkerType, MiniMap, Position, type Edge, type Node, useEdgesState, useNodesState } from '@xyflow/react';
 import { toPng } from 'html-to-image';
 import { parseFlowText } from './logic/parseFlowText';
 import { autoLayout } from './logic/autoLayout';
@@ -26,19 +26,23 @@ const nodeTypes = { motionNode: MotionNode };
 
 function buildFlow(text: string, direction: 'LR' | 'TB') {
   const graph = parseFlowText(text);
+  const isHorizontal = direction === 'LR';
   const nodes: Node[] = graph.nodes.map((node, index) => ({
     id: node.id,
     type: 'motionNode',
     position: { x: 0, y: 0 },
-    data: { label: node.label, index }
+    sourcePosition: isHorizontal ? Position.Right : Position.Bottom,
+    targetPosition: isHorizontal ? Position.Left : Position.Top,
+    data: { label: node.label, index, direction }
   }));
   const edges: Edge[] = graph.edges.map((edge) => ({
     id: edge.id,
     source: edge.source,
     target: edge.target,
-    animated: true,
     type: 'smoothstep',
-    style: { stroke: '#17130d', strokeWidth: 2.4 }
+    animated: true,
+    markerEnd: { type: MarkerType.ArrowClosed, color: '#17130d', width: 22, height: 22 },
+    style: { stroke: '#17130d', strokeWidth: 3.4 }
   }));
   return { nodes: autoLayout(nodes, edges, direction), edges };
 }
@@ -78,6 +82,53 @@ export default function MotionMapV2Spike() {
     link.click();
   };
 
+  const exportVideo = async () => {
+    if (!exportRef.current || !HTMLCanvasElement.prototype.captureStream || !window.MediaRecorder) return;
+
+    const width = exportRef.current.offsetWidth * 2;
+    const height = exportRef.current.offsetHeight * 2;
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const stream = canvas.captureStream(24);
+    const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+    const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 6000000 });
+    const chunks: BlobPart[] = [];
+
+    recorder.ondataavailable = (event) => {
+      if (event.data.size) chunks.push(event.data);
+    };
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = 'motionmap-v2-spike.webm';
+      link.href = url;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    };
+
+    recorder.start();
+    const started = performance.now();
+    const duration = 5000;
+    while (performance.now() - started < duration) {
+      const dataUrl = await toPng(exportRef.current, { pixelRatio: 2, backgroundColor: '#f7f4ee', cacheBust: true });
+      const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = dataUrl;
+      });
+      ctx.clearRect(0, 0, width, height);
+      ctx.drawImage(image, 0, 0, width, height);
+      await new Promise((resolve) => setTimeout(resolve, 1000 / 24));
+    }
+    recorder.stop();
+  };
+
   return (
     <div className="motion-v2">
       <section className="motion-v2-hero">
@@ -90,6 +141,7 @@ export default function MotionMapV2Spike() {
           <button className="btn btn-secondary" type="button" onClick={() => setExample('sales')}>Sales</button>
           <button className="btn btn-secondary" type="button" onClick={() => setExample('support')}>Support</button>
           <button className="btn btn-secondary" type="button" onClick={() => setExample('rag')}>RAG</button>
+          <button className="btn btn-secondary" type="button" onClick={exportVideo}>Video export</button>
           <button className="btn btn-primary" type="button" onClick={exportPng}>PNG export</button>
         </div>
       </section>
@@ -123,6 +175,12 @@ export default function MotionMapV2Spike() {
               nodes={nodes}
               edges={edges}
               nodeTypes={nodeTypes}
+              defaultEdgeOptions={{
+                type: 'smoothstep',
+                animated: true,
+                markerEnd: { type: MarkerType.ArrowClosed, color: '#17130d', width: 22, height: 22 },
+                style: { stroke: '#17130d', strokeWidth: 3.4 }
+              }}
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
               fitView
