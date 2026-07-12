@@ -27,6 +27,8 @@
 - Added Netlify deployment configuration, site-specific deploy scripts, and ignored local Netlify state.
 - Added MotionMap v2 animated edge styling and a custom edge component for the React Flow spike.
 - Updated README and contributing docs for the Astro/React structure, FlowClip route, Netlify deployment, CI, and current verification workflow.
+- Added Vitest coverage for FlowClip parsing, project normalization, field limits, duration clamping, and filename sanitization; included tests in CI.
+- Ignored local agent skill files so `.agents/` and `skills-lock.json` do not appear as project changes.
 
 ## 2026-07-08
 

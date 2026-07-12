@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "test": "vitest run",
     "deploy": "npx --yes netlify-cli@26.2.0 deploy --site 8c07e0e1-dbdf-4a4e-83a8-da8272b352d8 --dir dist",
     "deploy:prod": "npm run build && npx --yes netlify-cli@26.2.0 deploy --site 8c07e0e1-dbdf-4a4e-83a8-da8272b352d8 --dir dist --prod"
   },
@@ -25,6 +26,7 @@
     "@types/dagre": "0.7.54",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "vitest": "4.1.10"
   }
 }
