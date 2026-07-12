@@ -1,5 +1,4 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { toSvg } from 'html-to-image';
 import dagre from 'dagre';
 
 type RatioKey = 'portrait' | 'square' | 'short' | 'landscape';
@@ -405,6 +404,10 @@ function canvasHasNonBackgroundPixels(canvas: HTMLCanvasElement, backgroundHex: 
   return false;
 }
 
+const SVG_EXPORT_CSS = `
+.stage-bg{fill:#fffaf1}.diagram-title{fill:#17130d;font:900 54px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-2px}.diagram-subtitle{fill:#756d62;font:800 19px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2px;text-transform:uppercase}.node-card{fill:rgba(255,255,255,.92);stroke:#d5cab9;stroke-width:2}.node-label{fill:#17130d;font:900 34px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-1.2px}.edge-path{fill:none;stroke-linecap:round;stroke-linejoin:round}.edge-base{stroke:rgba(23,19,13,.14);stroke-width:5;stroke-dasharray:14 14}.edge-flow,.edge-draw,.edge-static{stroke:#315f9f;stroke-width:4}.edge-flow{stroke-dasharray:14 14;animation:flowclip-dash .9s linear infinite}.edge-draw{stroke-dasharray:1000;stroke-dashoffset:1000;animation:flowclip-draw 2.4s ease-in-out infinite}.edge-static{stroke-dasharray:none}.edge-dot{fill:#315f9f}.edge-arrow{fill:#315f9f}.edge-arrow-muted{fill:rgba(23,19,13,.30)}.edge-label{fill:#756d62;font:800 20px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.empty-state{fill:#756d62;font:900 28px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.theme-dark .stage-bg{fill:#080b13}.theme-dark .diagram-title{fill:#f8fafc}.theme-dark .diagram-subtitle{fill:#93a4bc}.theme-dark .node-card{fill:rgba(15,23,42,.92);stroke:rgba(148,163,184,.45)}.theme-dark .node-label{fill:#f8fafc}.theme-dark .edge-base{stroke:rgba(148,163,184,.22)}.theme-dark .edge-flow,.theme-dark .edge-draw,.theme-dark .edge-static{stroke:#60a5fa}.theme-dark .edge-dot{fill:#60a5fa}.theme-dark .edge-arrow{fill:#60a5fa}.theme-dark .edge-arrow-muted{fill:rgba(148,163,184,.45)}.theme-dark .edge-label{fill:#bfdbfe}.theme-sketch .stage-bg{fill:#fbf3df}.theme-sketch .diagram-title,.theme-sketch .node-label{font-family:"Comic Sans MS","Bradley Hand",system-ui,sans-serif}.theme-sketch .node-card{fill:rgba(255,252,242,.9);stroke:#17130d;stroke-width:3;stroke-dasharray:9 5}.theme-sketch .edge-base{stroke:rgba(23,19,13,.16)}.theme-sketch .edge-flow,.theme-sketch .edge-draw,.theme-sketch .edge-static{stroke:#17130d;stroke-width:6;stroke-dasharray:12 10}.theme-sketch .edge-dot{fill:#17130d}.theme-sketch .edge-arrow{fill:#17130d}.theme-sketch .edge-arrow-muted{fill:rgba(23,19,13,.34)}.animation-none .edge-base{stroke-dasharray:none}@keyframes flowclip-dash{to{stroke-dashoffset:-28}}@keyframes flowclip-draw{0%{stroke-dashoffset:1000;opacity:1}58%,78%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:.28}}
+`;
+
 export default function FlowClipApp() {
   const [text, setText] = useState(STARTER_TEXT);
   const [customTitle, setCustomTitle] = useState('');
@@ -660,8 +663,23 @@ export default function FlowClipApp() {
     setIsExporting(true);
     setStatus(`Exporting SVG ${ratioInfo.size}…`);
     try {
-      const dataUrl = await toSvg(exportRef.current, { cacheBust: true });
-      downloadDataUrl(dataUrl, `${fileBase}-${ratioInfo.width}x${ratioInfo.height}.svg`);
+      const svg = exportRef.current.querySelector('svg');
+      if (!svg) {
+        setStatus('SVG export failed. Preview is not available.');
+        return;
+      }
+      const clone = svg.cloneNode(true) as SVGSVGElement;
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.setAttribute('width', String(ratioInfo.width));
+      clone.setAttribute('height', String(ratioInfo.height));
+      clone.classList.add(`theme-${theme}`, `animation-${animation}`);
+
+      const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+      style.textContent = SVG_EXPORT_CSS;
+      clone.insertBefore(style, clone.firstChild);
+
+      const source = new XMLSerializer().serializeToString(clone);
+      downloadBlob(new Blob([source], { type: 'image/svg+xml;charset=utf-8' }), `${fileBase}-${ratioInfo.width}x${ratioInfo.height}.svg`);
       setStatus(`SVG exported at ${ratioInfo.size}.`);
     } catch (error) {
       console.error(error);
