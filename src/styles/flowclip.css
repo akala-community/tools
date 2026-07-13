@@ -199,9 +199,12 @@
 }
 
 .flowclip-sidebar-backdrop,
-.flowclip-sidebar-close,
 .flowclip-mobile-panel-trigger,
 .flowclip-mobile-bar {
+  display: none;
+}
+
+.flowclip-sidebar-panel .flowclip-sidebar-close {
   display: none;
 }
 
@@ -605,9 +608,14 @@
     border-radius: 28px 28px 22px 22px;
   }
 
-  .flowclip-sidebar-close,
   .flowclip-mobile-panel-trigger {
     display: inline-flex;
+  }
+
+  @media (pointer: coarse) {
+    .flowclip-sidebar-panel .flowclip-sidebar-close {
+      display: inline-flex;
+    }
   }
 
   .flowclip-stage-toolbar .flowclip-mobile-panel-trigger {

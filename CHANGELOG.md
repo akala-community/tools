@@ -19,6 +19,7 @@
 - Removed the homepage tools section title and subtitle so the page focuses directly on the tool list.
 - Replaced the FlowClip homepage thumbnail with the supplied SVG artwork asset.
 - Changed homepage tool cards to a vertical layout with the thumbnail on top.
+- Hid the FlowClip customize panel Close button on pointer-based desktop layouts while keeping it available for touch bottom sheets.
 
 ## 2026-07-12
 
