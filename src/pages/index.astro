@@ -5,42 +5,19 @@ import '../styles/gallery.css';
 ---
 <SiteLayout>
   <main>
-    <section class="hero">
-      <div class="hero-copy">
-        <h1>Browser tools for agent builders.</h1>
-        <p>Small, local-first utilities for prompts, diagrams, schemas, and reviews. No login. No backend. Useful exports.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="/tools/motion-map-v2/">Open MotionMap</a>
-        </div>
-      </div>
-    </section>
-
-    <section id="tools" aria-labelledby="tools-title">
-      <div class="section-head">
-        <div>
-          <h2 id="tools-title">Tools</h2>
-          <p>Open a tool, use the defaults, export the result.</p>
-        </div>
-      </div>
+    <section id="tools" aria-label="Tools">
       <div class="tool-grid">
         <ToolCard
           href="/tools/flowclip/"
-          thumb="A → B → C → video"
+          thumb="FlowClip preview"
+          thumbKind="flowclip"
           category="Creator diagrams"
           title="FlowClip"
           summary="Animated social diagrams from simple arrow text."
           description="Type a flow, pick a social ratio and theme, then export PNG, SVG, or WebM video."
           meta="Social-ready / Local-only / No canvas editor"
         />
-        <ToolCard
-          href="/tools/motion-map-v2/"
-          thumb="Flow text → diagram → export"
-          category="Diagramming"
-          title="MotionMap"
-          summary="Animated flow diagrams from simple arrow syntax."
-          description="Write a plain-text flow, render it with animated connectors, then export PNG or video."
-          meta="Diagramming / Local-only / React Flow"
-        />
+
       </div>
     </section>
     <span id="roadmap"></span>

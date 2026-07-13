@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-07-13
+
+- Reworked FlowClip into a desktop 3-column workspace with flow text, centered preview, and a dedicated customize/export sidebar.
+- Simplified FlowClip mobile UX by moving customization and export controls into a bottom-sheet panel opened from the preview or hero.
+- Verified `npm run build` passes after FlowClip UI changes.
+- Fixed FlowClip hydration by exporting/importing the React island as a named component so Astro resolves a concrete component export.
+- Added an explicit FlowClip Export panel label, changed WebM to a neutral button, and split project JSON import/export into its own panel.
+- Upgraded FlowClip's production UX with editor health stats, grouped Text/Canvas/Motion inspector panels, outcome-based export cards, and a mobile sticky action bar.
+- Added FlowClip production polish with toast status feedback, mobile sheet focus management, Escape-to-close, focus restoration, and body-scroll locking.
+- Removed FlowClip replay controls because the preview animations already loop continuously.
+- Aligned the FlowClip preview stage to the top of its container instead of vertically centering it.
+- Simplified the FlowClip right inspector by removing nested card styling from setting sections and using line separators instead.
+- Removed MotionMap from the homepage, pointed the hero CTA to FlowClip, and added a custom FlowClip thumbnail preview for the tool card.
+- Removed the homepage hero so the homepage focuses directly on the tools list.
+- Removed the Design system button from the homepage navigation.
+- Updated the AKALA Tools tagline to “Open-source browser utilities” across home and tool layouts.
+- Removed the homepage tools section title and subtitle so the page focuses directly on the tool list.
+- Replaced the FlowClip homepage thumbnail with the supplied SVG artwork asset.
+- Changed homepage tool cards to a vertical layout with the thumbnail on top.
+
 ## 2026-07-12
 
 - Added FlowClip at `/tools/flowclip/`, a separate creator-focused animated diagram tool using simple arrow text, social ratio presets, clean/dark/sketch themes, local autosave, and PNG/SVG/WebM export.

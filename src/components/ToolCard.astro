@@ -1,9 +1,13 @@
 ---
-const { href = '#', thumb, category, status = 'Available', statusKind = 'available', title, summary, description, meta, action = 'Open tool' } = Astro.props;
+const { href = '#', thumb, thumbKind = 'text', category, status = 'Available', statusKind = 'available', title, summary, description, meta, action = 'Open tool' } = Astro.props;
 ---
 <article class={`card tool-card ${statusKind}`}>
-  <a class="tool-thumb" href={href} aria-label={`Open ${title}`}>
-    <span>{thumb}</span>
+  <a class={`tool-thumb ${thumbKind === 'flowclip' ? 'flowclip-thumb' : ''}`} href={href} aria-label={`Open ${title}`}>
+    {thumbKind === 'flowclip' ? (
+      <img src="/assets/flowclip-thumbnail.svg" alt="" loading="lazy" />
+    ) : (
+      <span>{thumb}</span>
+    )}
   </a>
   <div class="tool-card-body">
     <div class="tool-meta-row">

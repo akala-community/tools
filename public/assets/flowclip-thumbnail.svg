@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAF8F5"/>
+      <stop offset="100%" stop-color="#F2EDE4"/>
+    </linearGradient>
+    <filter id="drop-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#000000" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#bg-grad)"/>
+
+  <g transform="translate(60, 75)" filter="url(#drop-shadow)">
+    <rect width="280" height="300" rx="12" fill="#FFFFFF" stroke="#E6E1DA" stroke-width="1"/>
+    <path d="M 0 12 A 12 12 0 0 1 12 0 L 268 0 A 12 12 0 0 1 280 12 L 280 45 L 0 45 Z" fill="#FAF8F5"/>
+    <line x1="0" y1="45" x2="280" y2="45" stroke="#E6E1DA" stroke-width="1"/>
+    <text x="20" y="27" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#7C7365" letter-spacing="0.5">Flow text</text>
+    <rect x="215" y="14" width="45" height="18" rx="9" fill="#E2F0D9"/>
+    <circle cx="224" cy="23" r="3" fill="#385723"/>
+
+    <text x="20" y="85" font-family="monospace" font-size="15" fill="#1A1917" font-weight="600">Title Launch Plan</text>
+    <text x="20" y="125" font-family="monospace" font-size="15" fill="#1A1917" font-weight="600">Teaser &gt; Waitlist</text>
+    <text x="20" y="165" font-family="monospace" font-size="15" fill="#1A1917" font-weight="600">Waitlist &gt; Email Drop</text>
+    <text x="20" y="205" font-family="monospace" font-size="15" fill="#1A1917" font-weight="600">Waitlist &gt; Demo</text>
+    <text x="20" y="245" font-family="monospace" font-size="15" fill="#1A1917" font-weight="600">Demo &gt; Launch</text>
+  </g>
+
+  <g transform="translate(365, 215)">
+    <path d="M 0 10 L 40 10" stroke="#A89F91" stroke-width="3" stroke-dasharray="5 5" stroke-linecap="round"/>
+    <polygon points="40,4 52,10 40,16" fill="#A89F91"/>
+  </g>
+
+  <g transform="translate(440, 45)" filter="url(#drop-shadow)">
+    <rect width="300" height="360" rx="12" fill="#FFFFFF"/>
+    <text x="150" y="45" font-family="system-ui, sans-serif" font-size="18" font-weight="800" text-anchor="middle" fill="#1A1917">Launch Plan</text>
+
+    <rect x="90" y="75" width="120" height="35" rx="6" fill="#FAF8F5" stroke="#E6E1DA" stroke-width="1"/>
+    <text x="150" y="97" font-family="system-ui, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#2B2927">Teaser</text>
+    <path d="M 150 110 L 150 135" stroke="#3B82F6" stroke-width="2" stroke-dasharray="3 3"/>
+
+    <rect x="90" y="135" width="120" height="35" rx="6" fill="#FAF8F5" stroke="#E6E1DA" stroke-width="1"/>
+    <text x="150" y="157" font-family="system-ui, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#2B2927">Waitlist</text>
+
+    <path d="M 150 170 L 150 182 L 75 182 L 75 205" fill="none" stroke="#3B82F6" stroke-width="2" stroke-dasharray="3 3"/>
+    <path d="M 150 170 L 150 182 L 225 182 L 225 205" fill="none" stroke="#3B82F6" stroke-width="2" stroke-dasharray="3 3"/>
+
+    <rect x="20" y="205" width="110" height="35" rx="6" fill="#FAF8F5" stroke="#E6E1DA" stroke-width="1"/>
+    <text x="75" y="227" font-family="system-ui, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#2B2927">Email Drop</text>
+
+    <rect x="170" y="205" width="110" height="35" rx="6" fill="#FAF8F5" stroke="#E6E1DA" stroke-width="1"/>
+    <text x="225" y="227" font-family="system-ui, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#2B2927">Demo</text>
+
+    <path d="M 75 240 L 75 263 L 150 263 L 150 280" fill="none" stroke="#3B82F6" stroke-width="2" stroke-dasharray="3 3"/>
+    <path d="M 225 240 L 225 263 L 150 263 L 150 280" fill="none" stroke="#3B82F6" stroke-width="2" stroke-dasharray="3 3"/>
+
+    <rect x="90" y="280" width="120" height="35" rx="6" fill="#FAF8F5" stroke="#E6E1DA" stroke-width="1"/>
+    <text x="150" y="302" font-family="system-ui, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#2B2927">Launch</text>
+  </g>
+</svg>

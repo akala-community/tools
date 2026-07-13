@@ -56,7 +56,7 @@ API -> App: shows result`,
   },
 ];
 
-export default function FlowClipApp() {
+export function FlowClipApp() {
   const [text, setText] = useState(STARTER_TEXT);
   const [customTitle, setCustomTitle] = useState('');
   const [subtitle, setSubtitle] = useState('Made with FlowClip');
@@ -65,9 +65,14 @@ export default function FlowClipApp() {
   const [animation, setAnimation] = useState<AnimationKey>('flow');
   const [duration, setDuration] = useState(6);
   const [status, setStatus] = useState('Ready.');
+  const [toastMessage, setToastMessage] = useState('');
   const [isExporting, setIsExporting] = useState(false);
+  const [isMobilePanelOpen, setIsMobilePanelOpen] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
   const projectInputRef = useRef<HTMLInputElement>(null);
+  const mobilePanelRef = useRef<HTMLDivElement>(null);
+  const mobilePanelCloseRef = useRef<HTMLButtonElement>(null);
+  const mobilePanelOpenerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     try {
@@ -88,6 +93,51 @@ export default function FlowClipApp() {
     }
   }, [text, customTitle, subtitle, ratio, theme, animation, duration]);
 
+  useEffect(() => {
+    if (status === 'Ready.') return;
+    setToastMessage(status);
+    const timeout = window.setTimeout(() => setToastMessage(''), 4200);
+    return () => window.clearTimeout(timeout);
+  }, [status]);
+
+  useEffect(() => {
+    if (!isMobilePanelOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.setTimeout(() => mobilePanelCloseRef.current?.focus(), 0);
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeMobilePanel();
+        return;
+      }
+
+      if (event.key !== 'Tab' || !mobilePanelRef.current) return;
+      const focusable = Array.from(
+        mobilePanelRef.current.querySelectorAll<HTMLElement>('button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])')
+      ).filter((element) => !element.hasAttribute('disabled') && element.tabIndex !== -1);
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMobilePanelOpen]);
+
   const parsed = useMemo(() => parseFlowText(text, ratio), [text, ratio]);
   const displayTitle = customTitle.trim() || parsed.title;
   const displaySubtitle = subtitle.trim();
@@ -95,6 +145,9 @@ export default function FlowClipApp() {
   const stageMaxWidth = ratio === 'landscape' ? '820px' : ratio === 'square' ? '600px' : ratio === 'short' ? '480px' : '520px';
   const stageViewportWidth = `${(78 * ratioInfo.width) / ratioInfo.height}vh`;
   const fileBase = safeFileName(displayTitle);
+  const healthLabel = parsed.warnings.length > 0
+    ? `${parsed.warnings.length} warning${parsed.warnings.length === 1 ? '' : 's'}`
+    : 'Valid flow';
 
   function canExportDiagram(format: string) {
     if (parsed.nodes.length > MAX_EXPORT_NODES || parsed.edges.length > MAX_EXPORT_EDGES) {
@@ -113,6 +166,16 @@ export default function FlowClipApp() {
     if (project.theme) setTheme(project.theme);
     if (project.animation) setAnimation(project.animation);
     if (typeof project.duration === 'number') setDuration(project.duration);
+  }
+
+  function openMobilePanel() {
+    mobilePanelOpenerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setIsMobilePanelOpen(true);
+  }
+
+  function closeMobilePanel() {
+    setIsMobilePanelOpen(false);
+    window.setTimeout(() => mobilePanelOpenerRef.current?.focus(), 0);
   }
 
   function exportProjectJson() {
@@ -277,17 +340,24 @@ export default function FlowClipApp() {
         </div>
         <div className="flowclip-hero-actions">
           <button className="tool-btn" onClick={() => setText(EXAMPLES[0].value)}>Reset example</button>
-          <button className="tool-btn tool-btn-primary" onClick={exportWebm} disabled={isExporting}>Export video</button>
+          <button className="tool-btn tool-btn-primary flowclip-mobile-panel-trigger" onClick={openMobilePanel}>Customize & export</button>
         </div>
       </section>
 
       <section className="flowclip-layout">
-        <aside className="flowclip-editor panel">
+        <aside id="flowclip-editor" className="flowclip-editor panel">
           <div className="panel-head">
             <div>
               <h2>Flow text</h2>
               <p>One path per line. Comments start with #.</p>
             </div>
+            <span className={`flowclip-health ${parsed.warnings.length > 0 ? 'is-warning' : 'is-valid'}`}>{healthLabel}</span>
+          </div>
+
+          <div className="flowclip-editor-stats" aria-label="Flow stats">
+            <span>{parsed.nodes.length} nodes</span>
+            <span>{parsed.edges.length} links</span>
+            <span>{ratioInfo.label}</span>
           </div>
 
           <textarea
@@ -318,40 +388,16 @@ export default function FlowClipApp() {
         </aside>
 
         <main className="flowclip-workspace">
-          <div className="flowclip-controls panel">
-            <label className="flowclip-control-wide">
-              Title
-              <input type="text" value={customTitle} placeholder={parsed.title} onChange={(event) => setCustomTitle(event.target.value)} />
-            </label>
-            <label className="flowclip-control-wide">
-              Subtitle
-              <input type="text" value={subtitle} placeholder="Optional subtitle" onChange={(event) => setSubtitle(event.target.value)} />
-            </label>
-            <label>
-              Ratio
-              <select value={ratio} onChange={(event) => setRatio(event.target.value as RatioKey)}>
-                {Object.entries(RATIOS).map(([key, item]) => <option key={key} value={key}>{item.label} · {item.size}</option>)}
-              </select>
-            </label>
-            <label>
-              Theme
-              <select value={theme} onChange={(event) => setTheme(event.target.value as ThemeKey)}>
-                {Object.entries(THEMES).map(([key, item]) => <option key={key} value={key}>{item.label}</option>)}
-              </select>
-            </label>
-            <label>
-              Motion
-              <select value={animation} onChange={(event) => setAnimation(event.target.value as AnimationKey)}>
-                {Object.entries(ANIMATIONS).map(([key, item]) => <option key={key} value={key}>{item.label}</option>)}
-              </select>
-            </label>
-            <label>
-              Seconds
-              <input type="number" min="3" max="20" value={duration} onChange={(event) => setDuration(clampDuration(Number(event.target.value)))} />
-            </label>
-          </div>
-
           <div className="flowclip-stage-wrap panel">
+            <div className="flowclip-stage-toolbar">
+              <div>
+                <strong>{displayTitle}</strong>
+                <span>{ratioInfo.label} · {ratioInfo.size}</span>
+              </div>
+              <div className="flowclip-stage-actions">
+                <button className="tool-btn flowclip-mobile-panel-trigger" onClick={openMobilePanel}>Customize</button>
+              </div>
+            </div>
             <div
               ref={exportRef}
               className={`flowclip-stage theme-${theme} animation-${animation}`}
@@ -365,28 +411,128 @@ export default function FlowClipApp() {
             </div>
           </div>
 
-          <div className="flowclip-export panel">
-            <span aria-live="polite">{status}</span>
-            <div>
-              <button className="tool-btn" onClick={exportPng} disabled={isExporting}>PNG {ratioInfo.size}</button>
-              <button className="tool-btn" onClick={exportSvg} disabled={isExporting}>SVG {ratioInfo.size}</button>
-              <button className="tool-btn tool-btn-primary" onClick={exportWebm} disabled={isExporting}>WebM {ratioInfo.size}</button>
-              <button className="tool-btn" onClick={exportProjectJson} disabled={isExporting}>Export JSON</button>
-              <button className="tool-btn" onClick={() => projectInputRef.current?.click()} disabled={isExporting}>Import JSON</button>
-              <input
-                ref={projectInputRef}
-                className="flowclip-file-input"
-                type="file"
-                accept="application/json,.json,.flowclip.json"
-                onChange={(event) => importProjectJson(event.target.files?.[0])}
-              />
+        </main>
+
+        <aside className={`flowclip-sidebar ${isMobilePanelOpen ? 'is-open' : ''}`} aria-label="FlowClip settings">
+          <button className="flowclip-sidebar-backdrop" type="button" aria-label="Close settings" onClick={closeMobilePanel} />
+          <div className="flowclip-sidebar-panel" ref={mobilePanelRef} role={isMobilePanelOpen ? 'dialog' : undefined} aria-modal={isMobilePanelOpen ? 'true' : undefined} aria-labelledby="flowclip-settings-title">
+            <div className="flowclip-sidebar-head">
+              <div>
+                <h2 id="flowclip-settings-title">Customize</h2>
+                <p>Canvas, motion, and export options.</p>
+              </div>
+              <button className="tool-btn flowclip-sidebar-close" ref={mobilePanelCloseRef} onClick={closeMobilePanel}>Close</button>
+            </div>
+
+            <div className="flowclip-settings-panel">
+              <div className="flowclip-panel-title">
+                <h3>Text</h3>
+                <span>Override the generated title and caption.</span>
+              </div>
+              <label>
+                Title
+                <input type="text" value={customTitle} placeholder={parsed.title} onChange={(event) => setCustomTitle(event.target.value)} />
+              </label>
+              <label>
+                Subtitle
+                <input type="text" value={subtitle} placeholder="Optional subtitle" onChange={(event) => setSubtitle(event.target.value)} />
+              </label>
+            </div>
+
+            <div className="flowclip-settings-panel">
+              <div className="flowclip-panel-title">
+                <h3>Canvas</h3>
+                <span>Pick the social frame and visual treatment.</span>
+              </div>
+              <label>
+                Ratio
+                <select value={ratio} onChange={(event) => setRatio(event.target.value as RatioKey)}>
+                  {Object.entries(RATIOS).map(([key, item]) => <option key={key} value={key}>{item.label} · {item.size}</option>)}
+                </select>
+              </label>
+              <label>
+                Theme
+                <select value={theme} onChange={(event) => setTheme(event.target.value as ThemeKey)}>
+                  {Object.entries(THEMES).map(([key, item]) => <option key={key} value={key}>{item.label}</option>)}
+                </select>
+              </label>
+            </div>
+
+            <div className="flowclip-settings-panel">
+              <div className="flowclip-panel-title">
+                <h3>Motion</h3>
+                <span>Preview timing matches video export.</span>
+              </div>
+              <label>
+                Motion style
+                <select value={animation} onChange={(event) => setAnimation(event.target.value as AnimationKey)}>
+                  {Object.entries(ANIMATIONS).map(([key, item]) => <option key={key} value={key}>{item.label}</option>)}
+                </select>
+              </label>
+              <label>
+                Duration seconds
+                <input type="number" min="3" max="20" value={duration} onChange={(event) => setDuration(clampDuration(Number(event.target.value)))} />
+              </label>
+            </div>
+
+            <div className="flowclip-export" id="flowclip-export">
+              <div className="flowclip-panel-title">
+                <h3>Export</h3>
+                <span aria-live="polite">{status}</span>
+              </div>
+              <div>
+                <button className="flowclip-action-card" onClick={exportPng} disabled={isExporting}>
+                  <strong>Download image</strong>
+                  <span>PNG · {ratioInfo.size}</span>
+                </button>
+                <button className="flowclip-action-card" onClick={exportSvg} disabled={isExporting}>
+                  <strong>Download vector</strong>
+                  <span>SVG · editable</span>
+                </button>
+                <button className="flowclip-action-card" onClick={exportWebm} disabled={isExporting}>
+                  <strong>Download video</strong>
+                  <span>WebM · {duration}s</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flowclip-project">
+              <div className="flowclip-panel-title">
+                <h3>Project</h3>
+                <span>Save or load editable JSON.</span>
+              </div>
+              <div>
+                <button className="tool-btn" onClick={exportProjectJson} disabled={isExporting}>Save project</button>
+                <button className="tool-btn" onClick={() => projectInputRef.current?.click()} disabled={isExporting}>Open project</button>
+                <input
+                  ref={projectInputRef}
+                  className="flowclip-file-input"
+                  type="file"
+                  accept="application/json,.json,.flowclip.json"
+                  onChange={(event) => importProjectJson(event.target.files?.[0])}
+                />
+              </div>
             </div>
           </div>
-        </main>
+        </aside>
       </section>
+
+      <nav className="flowclip-mobile-bar" aria-label="FlowClip mobile actions">
+        <a className="tool-btn" href="#flowclip-editor">Edit</a>
+        <button className="tool-btn" onClick={openMobilePanel}>Customize</button>
+        <button className="tool-btn" onClick={openMobilePanel}>Export</button>
+      </nav>
+
+      {toastMessage && (
+        <div className={`flowclip-toast ${/failed|could not|blocked|large|not supported/i.test(toastMessage) ? 'is-error' : 'is-success'}`} role="status" aria-live="polite">
+          {toastMessage}
+        </div>
+      )}
     </div>
   );
 }
+
+export default FlowClipApp;
 
 function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { flow: ParsedFlow; title: string; subtitle: string; ratio: RatioKey; animation: AnimationKey; duration: number }) {
   const shadowId = useId();
