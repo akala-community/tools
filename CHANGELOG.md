@@ -32,6 +32,7 @@
 - Split FlowClip canvas/SVG export rendering and download helpers into a dedicated export module.
 - Smoothed FlowClip edge loops by aligning preview/export animation timing and making draw/flow endpoints loop cleanly.
 - Added WebM duration metadata finalization so social platforms do not misread FlowClip exports as overly long videos.
+- Fixed Story/Short preview sizing so the FlowClip stage and SVG background stay aligned.
 
 ## 2026-07-08
 

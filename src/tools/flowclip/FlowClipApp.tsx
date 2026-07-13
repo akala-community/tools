@@ -92,6 +92,8 @@ export default function FlowClipApp() {
   const displayTitle = customTitle.trim() || parsed.title;
   const displaySubtitle = subtitle.trim();
   const ratioInfo = RATIOS[ratio];
+  const stageMaxWidth = ratio === 'landscape' ? '820px' : ratio === 'square' ? '600px' : ratio === 'short' ? '480px' : '520px';
+  const stageViewportWidth = `${(78 * ratioInfo.width) / ratioInfo.height}vh`;
   const fileBase = safeFileName(displayTitle);
 
   function canExportDiagram(format: string) {
@@ -353,7 +355,11 @@ export default function FlowClipApp() {
             <div
               ref={exportRef}
               className={`flowclip-stage theme-${theme} animation-${animation}`}
-              style={{ aspectRatio: `${ratioInfo.width} / ${ratioInfo.height}` }}
+              style={{
+                aspectRatio: `${ratioInfo.width} / ${ratioInfo.height}`,
+                ['--stage-max-width' as string]: stageMaxWidth,
+                ['--stage-vh-width' as string]: stageViewportWidth,
+              }}
             >
               <DiagramCanvas flow={parsed} title={displayTitle} subtitle={displaySubtitle} ratio={ratio} animation={animation} duration={duration} />
             </div>
