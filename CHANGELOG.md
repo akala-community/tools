@@ -2,6 +2,7 @@
 
 ## 2026-07-13
 
+- Added FlowClip auto-scaling for dense diagrams so larger flows keep nodes and text inside the canvas with more usable spacing in SVG preview and exports.
 - Reworked FlowClip into a desktop 3-column workspace with flow text, centered preview, and a dedicated customize/export sidebar.
 - Simplified FlowClip mobile UX by moving customization and export controls into a bottom-sheet panel opened from the preview or hero.
 - Verified `npm run build` passes after FlowClip UI changes.

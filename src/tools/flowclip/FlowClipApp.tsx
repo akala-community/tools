@@ -9,7 +9,7 @@ import {
   THEMES,
   clampDuration,
   getEdgePorts,
-  getLayoutDirection,
+  getFlowRenderLayout,
   getProjectState,
   getSmoothCurve,
   normalizeProjectState,
@@ -536,24 +536,7 @@ export default FlowClipApp;
 
 function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { flow: ParsedFlow; title: string; subtitle: string; ratio: RatioKey; animation: AnimationKey; duration: number }) {
   const shadowId = useId();
-  const viewBox = ratio === 'landscape' ? { width: 1600, height: 900 } : ratio === 'square' ? { width: 1080, height: 1080 } : { width: 1080, height: ratio === 'short' ? 1920 : 1440 };
-  const isVertical = getLayoutDirection(ratio, flow.nodes.length) === 'TB';
-  const padX = viewBox.width * (isVertical ? 0.12 : 0.08);
-  const top = viewBox.height * 0.18;
-  const bottom = viewBox.height * 0.10;
-  const usableWidth = viewBox.width - padX * 2;
-  const usableHeight = viewBox.height - top - bottom;
-
-  const sizeScale = isVertical
-    ? Math.min(1.18, (viewBox.width * 0.78) / Math.max(1, ...flow.nodes.map((node) => node.width)))
-    : Math.min(1.15, (viewBox.width * 0.34) / Math.max(1, ...flow.nodes.map((node) => node.width)));
-  const placed = flow.nodes.map((node) => ({
-    ...node,
-    width: node.width * sizeScale,
-    height: node.height * sizeScale,
-    px: padX + node.x * usableWidth,
-    py: top + node.y * usableHeight,
-  }));
+  const { viewBox, isVertical, sizeScale, placed } = getFlowRenderLayout(flow, ratio);
   const placedById = new Map(placed.map((node) => [node.id, node]));
 
   return (
@@ -588,8 +571,9 @@ function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { 
           const labelText = edge.label?.trim();
           const labelX = midX;
           const labelY = midY - 18;
-          const labelWidth = labelText ? Math.max(84, labelText.length * 13 + 38) : 0;
-          const labelHeight = 38;
+          const edgeLabelFontSize = 24 * sizeScale;
+          const labelWidth = labelText ? Math.max(84 * sizeScale, labelText.length * 13 * sizeScale + 38 * sizeScale) : 0;
+          const labelHeight = 38 * sizeScale;
           return (
             <g key={edge.id} className="edge" style={{ ['--i' as string]: edge.order, ['--dur' as string]: `${duration}s` }}>
               <path className="edge-path edge-base" d={path} />
@@ -607,7 +591,7 @@ function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { 
               {labelText && (
                 <g className="edge-label-group">
                   <rect className="edge-label-bg" x={labelX - labelWidth / 2} y={labelY - labelHeight + 8} width={labelWidth} height={labelHeight} />
-                  <text className="edge-label" x={labelX} y={labelY} textAnchor="middle">{labelText}</text>
+                  <text className="edge-label" x={labelX} y={labelY} textAnchor="middle" style={{ fontSize: edgeLabelFontSize }}>{labelText}</text>
                 </g>
               )}
             </g>
@@ -619,7 +603,7 @@ function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { 
         {placed.map((node) => (
           <g key={node.id} className="node" transform={`translate(${node.px - node.width / 2} ${node.py - node.height / 2})`} style={{ ['--i' as string]: node.level }}>
             <rect className="node-card" width={node.width} height={node.height} rx={Math.min(28, node.height / 3)} filter={`url(#${shadowId})`} />
-            <text className="node-label" x={node.width / 2} y={node.height / 2 - ((node.lines.length - 1) * 21 * sizeScale) + 10 * sizeScale} textAnchor="middle">
+            <text className="node-label" x={node.width / 2} y={node.height / 2 - ((node.lines.length - 1) * 21 * sizeScale) + 10 * sizeScale} textAnchor="middle" style={{ fontSize: 34 * sizeScale }}>
               {node.lines.map((line, index) => (
                 <tspan key={`${node.id}-${index}`} x={node.width / 2} dy={index === 0 ? 0 : 42 * sizeScale}>{line}</tspan>
               ))}

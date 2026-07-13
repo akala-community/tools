@@ -31,6 +31,18 @@ export type ParsedFlow = {
   warnings: string[];
 };
 
+export type FlowNodePlacement = FlowNode & {
+  px: number;
+  py: number;
+};
+
+export type FlowRenderLayout = {
+  viewBox: { width: number; height: number };
+  isVertical: boolean;
+  sizeScale: number;
+  placed: FlowNodePlacement[];
+};
+
 export type FlowClipProject = {
   version: 1;
   text: string;
@@ -73,6 +85,62 @@ export function getLayoutDirection(ratio: RatioKey, nodeCount: number): 'LR' | '
   if (ratio === 'landscape') return 'LR';
   if (ratio === 'square') return nodeCount <= 4 ? 'LR' : 'TB';
   return 'TB';
+}
+
+export function getFlowViewBox(ratio: RatioKey) {
+  if (ratio === 'landscape') return { width: 1600, height: 900 };
+  if (ratio === 'square') return { width: 1080, height: 1080 };
+  return { width: 1080, height: ratio === 'short' ? 1920 : 1440 };
+}
+
+export function getFlowRenderLayout(flow: ParsedFlow, ratio: RatioKey): FlowRenderLayout {
+  const viewBox = getFlowViewBox(ratio);
+  const isVertical = getLayoutDirection(ratio, flow.nodes.length) === 'TB';
+  const padX = viewBox.width * (isVertical ? 0.12 : 0.08);
+  const top = viewBox.height * 0.18;
+  const bottom = viewBox.height * 0.10;
+  const usableWidth = viewBox.width - padX * 2;
+  const usableHeight = viewBox.height - top - bottom;
+  const baseScale = isVertical
+    ? Math.min(1.18, (viewBox.width * 0.78) / Math.max(1, ...flow.nodes.map((node) => node.width)))
+    : Math.min(1.15, (viewBox.width * 0.34) / Math.max(1, ...flow.nodes.map((node) => node.width)));
+  const centerPlaced = flow.nodes.map((node) => ({
+    ...node,
+    px: padX + node.x * usableWidth,
+    py: top + node.y * usableHeight,
+  }));
+  let sizeScale = baseScale;
+  const edgePad = 28;
+  const nodeGap = isVertical ? 46 : 54;
+
+  centerPlaced.forEach((node) => {
+    const maxWidthScale = Math.max(0.2, (Math.min(node.px, viewBox.width - node.px) - edgePad) * 2 / Math.max(1, node.width));
+    const maxHeightScale = Math.max(0.2, (Math.min(node.py, viewBox.height - node.py) - edgePad) * 2 / Math.max(1, node.height));
+    sizeScale = Math.min(sizeScale, maxWidthScale, maxHeightScale);
+  });
+
+  for (let i = 0; i < centerPlaced.length; i += 1) {
+    for (let j = i + 1; j < centerPlaced.length; j += 1) {
+      const a = centerPlaced[i];
+      const b = centerPlaced[j];
+      const primaryDistance = Math.abs((isVertical ? b.py : b.px) - (isVertical ? a.py : a.px));
+      const crossDistance = Math.abs((isVertical ? b.px : b.py) - (isVertical ? a.px : a.py));
+      const primarySize = ((isVertical ? a.height : a.width) + (isVertical ? b.height : b.width)) / 2;
+      const crossSize = ((isVertical ? a.width : a.height) + (isVertical ? b.width : b.height)) / 2;
+
+      if (primaryDistance <= 1 || crossDistance > crossSize * baseScale + nodeGap) continue;
+      sizeScale = Math.min(sizeScale, Math.max(0.2, (primaryDistance - nodeGap) / Math.max(1, primarySize)));
+    }
+  }
+
+  sizeScale = Math.max(0.38, sizeScale);
+  const placed = centerPlaced.map((node) => ({
+    ...node,
+    width: node.width * sizeScale,
+    height: node.height * sizeScale,
+  }));
+
+  return { viewBox, isVertical, sizeScale, placed };
 }
 
 export function cleanToken(value: string) {

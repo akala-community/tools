@@ -2,7 +2,7 @@ import {
   cubicPoint,
   drawCubicSegment,
   getEdgePorts,
-  getLayoutDirection,
+  getFlowRenderLayout,
   getSmoothCurve,
   roundedRectPath,
   type AnimationKey,
@@ -78,27 +78,7 @@ export function getThemeBackground(theme: ThemeKey) {
 export function drawFlowFrame(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, options: FlowRenderOptions, progress: number) {
   const { flow, title, subtitle, ratio, theme, animation, duration } = options;
   const loopPhase = ((progress % duration) + duration) % duration / duration;
-  const viewBox = ratio === 'landscape'
-    ? { width: 1600, height: 900 }
-    : ratio === 'square'
-      ? { width: 1080, height: 1080 }
-      : { width: 1080, height: ratio === 'short' ? 1920 : 1440 };
-  const isVertical = getLayoutDirection(ratio, flow.nodes.length) === 'TB';
-  const padX = viewBox.width * (isVertical ? 0.12 : 0.08);
-  const top = viewBox.height * 0.18;
-  const bottom = viewBox.height * 0.10;
-  const usableWidth = viewBox.width - padX * 2;
-  const usableHeight = viewBox.height - top - bottom;
-  const sizeScale = isVertical
-    ? Math.min(1.18, (viewBox.width * 0.78) / Math.max(1, ...flow.nodes.map((node) => node.width)))
-    : Math.min(1.15, (viewBox.width * 0.34) / Math.max(1, ...flow.nodes.map((node) => node.width)));
-  const placed = flow.nodes.map((node) => ({
-    ...node,
-    width: node.width * sizeScale,
-    height: node.height * sizeScale,
-    px: padX + node.x * usableWidth,
-    py: top + node.y * usableHeight,
-  }));
+  const { viewBox, isVertical, sizeScale, placed } = getFlowRenderLayout(flow, ratio);
   const placedById = new Map(placed.map((node) => [node.id, node]));
   const colors = theme === 'dark'
     ? { bg: '#080b13', title: '#f8fafc', sub: '#93a4bc', node: '#0f172a', nodeStroke: '#64748b', text: '#f8fafc', base: 'rgba(148,163,184,.28)', edge: '#60a5fa', labelBg: 'rgba(8,11,19,.9)', labelText: '#dbeafe' }
@@ -188,13 +168,13 @@ export function drawFlowFrame(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasE
     if (labelText) {
       const labelX = (start.x + end.x) / 2;
       const labelY = (start.y + end.y) / 2 - 18;
-      const labelWidth = Math.max(84, labelText.length * 13 + 38);
-      const labelHeight = 38;
+      const labelWidth = Math.max(84 * sizeScale, labelText.length * 13 * sizeScale + 38 * sizeScale);
+      const labelHeight = 38 * sizeScale;
       ctx.save();
       ctx.fillStyle = colors.labelBg;
       ctx.fillRect(labelX - labelWidth / 2, labelY - labelHeight + 8, labelWidth, labelHeight);
       ctx.fillStyle = colors.labelText;
-      ctx.font = '900 24px Inter, system-ui, sans-serif';
+      ctx.font = `900 ${24 * sizeScale}px Inter, system-ui, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'alphabetic';
       ctx.fillText(labelText, labelX, labelY);

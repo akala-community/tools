@@ -4,6 +4,7 @@ import {
   MAX_SUBTITLE_LENGTH,
   MAX_TITLE_LENGTH,
   clampDuration,
+  getFlowRenderLayout,
   getLayoutDirection,
   getProjectState,
   normalizeProjectState,
@@ -35,6 +36,20 @@ describe('FlowClip parser', () => {
     expect(getLayoutDirection('square', 4)).toBe('LR');
     expect(getLayoutDirection('square', 5)).toBe('TB');
     expect(getLayoutDirection('portrait', 2)).toBe('TB');
+  });
+
+  it('auto-scales dense diagrams so nodes keep usable spacing inside the canvas', () => {
+    const flow = parseFlowText(`title Complex Flow
+A -> B -> C -> D -> E -> F -> G -> H -> I -> J -> K -> L`, 'portrait');
+    const layout = getFlowRenderLayout(flow, 'portrait');
+
+    expect(layout.sizeScale).toBeLessThan(1);
+    layout.placed.forEach((node) => {
+      expect(node.px - node.width / 2).toBeGreaterThanOrEqual(0);
+      expect(node.px + node.width / 2).toBeLessThanOrEqual(layout.viewBox.width);
+      expect(node.py - node.height / 2).toBeGreaterThanOrEqual(0);
+      expect(node.py + node.height / 2).toBeLessThanOrEqual(layout.viewBox.height);
+    });
   });
 });
 
