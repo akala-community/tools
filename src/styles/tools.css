@@ -138,6 +138,14 @@
   box-shadow: 0 14px 30px rgba(23, 19, 13, .18);
 }
 
+.tool-btn-primary:hover,
+.tool-page .btn-primary:hover,
+.tool-page .chip.primary:hover,
+.tool-page .btn:not(.secondary):not(.btn-secondary):hover {
+  color: #fffaf1;
+  background: #17130d;
+}
+
 .tool-tag,
 .tool-page .tag-pill {
   display: inline-flex;

@@ -33,6 +33,7 @@
 - Smoothed FlowClip edge loops by aligning preview/export animation timing and making draw/flow endpoints loop cleanly.
 - Added WebM duration metadata finalization so social platforms do not misread FlowClip exports as overly long videos.
 - Fixed Story/Short preview sizing so the FlowClip stage and SVG background stay aligned.
+- Fixed primary tool button hover contrast so text stays readable.
 
 ## 2026-07-08
 
