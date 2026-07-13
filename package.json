@@ -10,7 +10,7 @@
     "check": "astro check",
     "test": "vitest run",
     "deploy": "npx --yes netlify-cli@26.2.0 deploy --site 8c07e0e1-dbdf-4a4e-83a8-da8272b352d8 --dir dist",
-    "deploy:prod": "npm run build && npx --yes netlify-cli@26.2.0 deploy --site 8c07e0e1-dbdf-4a4e-83a8-da8272b352d8 --dir dist --prod"
+    "deploy:prod": "npx --yes netlify-cli@26.2.0 deploy --site 8c07e0e1-dbdf-4a4e-83a8-da8272b352d8 --dir dist --prod --no-build"
   },
   "dependencies": {
     "@astrojs/react": "6.0.1",
