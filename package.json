@@ -17,6 +17,7 @@
     "@xyflow/react": "12.11.2",
     "astro": "7.0.6",
     "dagre": "0.8.5",
+    "fix-webm-duration": "1.0.6",
     "html-to-image": "1.11.13",
     "react": "19.2.7",
     "react-dom": "19.2.7"

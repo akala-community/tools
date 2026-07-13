@@ -255,12 +255,12 @@
 }
 .edge-flow {
   stroke-dasharray: 14 14;
-  animation: flowclip-dash .9s linear infinite;
+  animation: flowclip-dash var(--dur, 6s) linear infinite;
 }
 .edge-draw {
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
-  animation: flowclip-draw 2.4s ease-in-out infinite;
+  animation: flowclip-draw var(--dur, 6s) ease-in-out infinite;
 }
 .edge-static {
   stroke-dasharray: none;
@@ -311,8 +311,10 @@
 .theme-sketch .edge-static {
   stroke: #17130d;
   stroke-width: 6;
-  stroke-dasharray: 12 10;
 }
+.theme-sketch .edge-flow { stroke-dasharray: 14 14; }
+.theme-sketch .edge-draw { stroke-dasharray: 1000; }
+.theme-sketch .edge-static { stroke-dasharray: 12 10; }
 .theme-sketch .edge-dot { fill: #17130d; }
 .theme-sketch .edge-arrow { fill: #17130d; }
 .theme-sketch .edge-arrow-muted { fill: rgba(23,19,13,.34); }
@@ -355,13 +357,14 @@
 }
 
 @keyframes flowclip-dash {
-  to { stroke-dashoffset: -28; }
+  to { stroke-dashoffset: -84; }
 }
 
 @keyframes flowclip-draw {
-  0% { stroke-dashoffset: 1000; opacity: 1; }
+  0% { stroke-dashoffset: 1000; opacity: .28; }
+  12% { opacity: 1; }
   58%, 78% { stroke-dashoffset: 0; opacity: 1; }
-  100% { stroke-dashoffset: 0; opacity: .28; }
+  100% { stroke-dashoffset: 1000; opacity: .28; }
 }
 
 @media (max-width: 980px) {

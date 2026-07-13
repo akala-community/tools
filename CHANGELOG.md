@@ -29,6 +29,9 @@
 - Updated README and contributing docs for the Astro/React structure, FlowClip route, Netlify deployment, CI, and current verification workflow.
 - Added Vitest coverage for FlowClip parsing, project normalization, field limits, duration clamping, and filename sanitization; included tests in CI.
 - Ignored local agent skill files so `.agents/` and `skills-lock.json` do not appear as project changes.
+- Split FlowClip canvas/SVG export rendering and download helpers into a dedicated export module.
+- Smoothed FlowClip edge loops by aligning preview/export animation timing and making draw/flow endpoints loop cleanly.
+- Added WebM duration metadata finalization so social platforms do not misread FlowClip exports as overly long videos.
 
 ## 2026-07-08
 
