@@ -20,7 +20,7 @@
 - Replaced the FlowClip homepage thumbnail with the supplied SVG artwork asset.
 - Changed homepage tool cards to a vertical layout with the thumbnail on top.
 - Hid the FlowClip customize panel Close button on pointer-based desktop layouts while keeping it available for touch bottom sheets.
-- Updated the production deploy script to upload the existing `dist` directory with Netlify `--no-build`.
+- Updated the production deploy script to build locally first, then upload `dist` to Netlify with `--no-build`.
 
 ## 2026-07-12
 
