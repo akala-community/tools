@@ -386,9 +386,12 @@
 }
 .edge-arrow { fill: #315f9f; }
 .edge-arrow-muted { fill: rgba(23,19,13,.30); }
+.edge-label-bg {
+  fill: rgba(255,250,241,.9);
+}
 .edge-label {
-  fill: #756d62;
-  font: 800 20px var(--sans);
+  fill: #5f564c;
+  font: 900 24px var(--sans);
 }
 .empty-state {
   fill: #756d62;
@@ -407,7 +410,8 @@
 .theme-dark .edge-dot { fill: #60a5fa; filter: drop-shadow(0 0 12px rgba(96,165,250,.5)); }
 .theme-dark .edge-arrow { fill: #60a5fa; }
 .theme-dark .edge-arrow-muted { fill: rgba(148,163,184,.45); }
-.theme-dark .edge-label { fill: #bfdbfe; }
+.theme-dark .edge-label-bg { fill: rgba(8,11,19,.9); }
+.theme-dark .edge-label { fill: #dbeafe; }
 
 .theme-sketch .stage-bg { fill: #fbf3df; }
 .theme-sketch .diagram-title,
@@ -433,6 +437,7 @@
 .theme-sketch .edge-dot { fill: #17130d; }
 .theme-sketch .edge-arrow { fill: #17130d; }
 .theme-sketch .edge-arrow-muted { fill: rgba(23,19,13,.34); }
+.theme-sketch .edge-label-bg { fill: rgba(251,243,223,.92); }
 
 .animation-flow .node,
 .animation-draw .node,

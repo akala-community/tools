@@ -585,6 +585,11 @@ function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { 
           const midY = (startY + endY) / 2;
           const curve = getSmoothCurve(start, end, isVertical);
           const path = curve.path;
+          const labelText = edge.label?.trim();
+          const labelX = midX;
+          const labelY = midY - 18;
+          const labelWidth = labelText ? Math.max(84, labelText.length * 13 + 38) : 0;
+          const labelHeight = 38;
           return (
             <g key={edge.id} className="edge" style={{ ['--i' as string]: edge.order, ['--dur' as string]: `${duration}s` }}>
               <path className="edge-path edge-base" d={path} />
@@ -599,7 +604,12 @@ function DiagramCanvas({ flow, title, subtitle, ratio, animation, duration }: { 
                 </>
               )}
               <path className={animation === 'none' ? 'edge-arrow edge-arrow-muted' : 'edge-arrow'} d="M 0 0 L -16 -7 L -16 7 Z" transform={`translate(${endX} ${endY}) rotate(${curve.angle * 180 / Math.PI})`} />
-              {edge.label && <text className="edge-label" x={midX} y={midY - 18} textAnchor="middle">{edge.label}</text>}
+              {labelText && (
+                <g className="edge-label-group">
+                  <rect className="edge-label-bg" x={labelX - labelWidth / 2} y={labelY - labelHeight + 8} width={labelWidth} height={labelHeight} />
+                  <text className="edge-label" x={labelX} y={labelY} textAnchor="middle">{labelText}</text>
+                </g>
+              )}
             </g>
           );
         })}

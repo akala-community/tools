@@ -21,6 +21,8 @@
 - Changed homepage tool cards to a vertical layout with the thumbnail on top.
 - Hid the FlowClip customize panel Close button on pointer-based desktop layouts while keeping it available for touch bottom sheets.
 - Updated the production deploy script to build locally first, then upload `dist` to Netlify with `--no-build`.
+- Added backgrounds behind FlowClip edge labels in SVG preview and canvas video export so animated connectors no longer reduce readability.
+- Increased FlowClip edge label text size and simplified label backgrounds to borderless rectangles.
 
 ## 2026-07-12
 

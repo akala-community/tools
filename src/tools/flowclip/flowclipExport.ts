@@ -22,7 +22,7 @@ export type FlowRenderOptions = {
 };
 
 export const SVG_EXPORT_CSS = `
-.stage-bg{fill:#fffaf1}.diagram-title{fill:#17130d;font:900 54px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-2px}.diagram-subtitle{fill:#756d62;font:800 19px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2px;text-transform:uppercase}.node-card{fill:rgba(255,255,255,.92);stroke:#d5cab9;stroke-width:2}.node-label{fill:#17130d;font:900 34px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-1.2px}.edge-path{fill:none;stroke-linecap:round;stroke-linejoin:round}.edge-base{stroke:rgba(23,19,13,.14);stroke-width:5;stroke-dasharray:14 14}.edge-flow,.edge-draw,.edge-static{stroke:#315f9f;stroke-width:4}.edge-flow{stroke-dasharray:14 14;animation:flowclip-dash var(--dur,6s) linear infinite}.edge-draw{stroke-dasharray:1000;stroke-dashoffset:1000;animation:flowclip-draw var(--dur,6s) ease-in-out infinite}.edge-static{stroke-dasharray:none}.edge-dot{fill:#315f9f}.edge-arrow{fill:#315f9f}.edge-arrow-muted{fill:rgba(23,19,13,.30)}.edge-label{fill:#756d62;font:800 20px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.empty-state{fill:#756d62;font:900 28px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.theme-dark .stage-bg{fill:#080b13}.theme-dark .diagram-title{fill:#f8fafc}.theme-dark .diagram-subtitle{fill:#93a4bc}.theme-dark .node-card{fill:rgba(15,23,42,.92);stroke:rgba(148,163,184,.45)}.theme-dark .node-label{fill:#f8fafc}.theme-dark .edge-base{stroke:rgba(148,163,184,.22)}.theme-dark .edge-flow,.theme-dark .edge-draw,.theme-dark .edge-static{stroke:#60a5fa}.theme-dark .edge-dot{fill:#60a5fa}.theme-dark .edge-arrow{fill:#60a5fa}.theme-dark .edge-arrow-muted{fill:rgba(148,163,184,.45)}.theme-dark .edge-label{fill:#bfdbfe}.theme-sketch .stage-bg{fill:#fbf3df}.theme-sketch .diagram-title,.theme-sketch .node-label{font-family:"Comic Sans MS","Bradley Hand",system-ui,sans-serif}.theme-sketch .node-card{fill:rgba(255,252,242,.9);stroke:#17130d;stroke-width:3;stroke-dasharray:9 5}.theme-sketch .edge-base{stroke:rgba(23,19,13,.16)}.theme-sketch .edge-flow,.theme-sketch .edge-draw,.theme-sketch .edge-static{stroke:#17130d;stroke-width:6}.theme-sketch .edge-flow{stroke-dasharray:14 14}.theme-sketch .edge-draw{stroke-dasharray:1000}.theme-sketch .edge-static{stroke-dasharray:12 10}.theme-sketch .edge-dot{fill:#17130d}.theme-sketch .edge-arrow{fill:#17130d}.theme-sketch .edge-arrow-muted{fill:rgba(23,19,13,.34)}.animation-none .edge-base{stroke-dasharray:none}@keyframes flowclip-dash{to{stroke-dashoffset:-84}}@keyframes flowclip-draw{0%{stroke-dashoffset:1000;opacity:.28}12%{opacity:1}58%,78%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:1000;opacity:.28}}
+.stage-bg{fill:#fffaf1}.diagram-title{fill:#17130d;font:900 54px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-2px}.diagram-subtitle{fill:#756d62;font:800 19px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2px;text-transform:uppercase}.node-card{fill:rgba(255,255,255,.92);stroke:#d5cab9;stroke-width:2}.node-label{fill:#17130d;font:900 34px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-1.2px}.edge-path{fill:none;stroke-linecap:round;stroke-linejoin:round}.edge-base{stroke:rgba(23,19,13,.14);stroke-width:5;stroke-dasharray:14 14}.edge-flow,.edge-draw,.edge-static{stroke:#315f9f;stroke-width:4}.edge-flow{stroke-dasharray:14 14;animation:flowclip-dash var(--dur,6s) linear infinite}.edge-draw{stroke-dasharray:1000;stroke-dashoffset:1000;animation:flowclip-draw var(--dur,6s) ease-in-out infinite}.edge-static{stroke-dasharray:none}.edge-dot{fill:#315f9f}.edge-arrow{fill:#315f9f}.edge-arrow-muted{fill:rgba(23,19,13,.30)}.edge-label-bg{fill:rgba(255,250,241,.9)}.edge-label{fill:#5f564c;font:900 24px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.empty-state{fill:#756d62;font:900 28px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.theme-dark .stage-bg{fill:#080b13}.theme-dark .diagram-title{fill:#f8fafc}.theme-dark .diagram-subtitle{fill:#93a4bc}.theme-dark .node-card{fill:rgba(15,23,42,.92);stroke:rgba(148,163,184,.45)}.theme-dark .node-label{fill:#f8fafc}.theme-dark .edge-base{stroke:rgba(148,163,184,.22)}.theme-dark .edge-flow,.theme-dark .edge-draw,.theme-dark .edge-static{stroke:#60a5fa}.theme-dark .edge-dot{fill:#60a5fa}.theme-dark .edge-arrow{fill:#60a5fa}.theme-dark .edge-arrow-muted{fill:rgba(148,163,184,.45)}.theme-dark .edge-label-bg{fill:rgba(8,11,19,.9)}.theme-dark .edge-label{fill:#dbeafe}.theme-sketch .stage-bg{fill:#fbf3df}.theme-sketch .diagram-title,.theme-sketch .node-label{font-family:"Comic Sans MS","Bradley Hand",system-ui,sans-serif}.theme-sketch .node-card{fill:rgba(255,252,242,.9);stroke:#17130d;stroke-width:3;stroke-dasharray:9 5}.theme-sketch .edge-base{stroke:rgba(23,19,13,.16)}.theme-sketch .edge-flow,.theme-sketch .edge-draw,.theme-sketch .edge-static{stroke:#17130d;stroke-width:6}.theme-sketch .edge-flow{stroke-dasharray:14 14}.theme-sketch .edge-draw{stroke-dasharray:1000}.theme-sketch .edge-static{stroke-dasharray:12 10}.theme-sketch .edge-dot{fill:#17130d}.theme-sketch .edge-arrow{fill:#17130d}.theme-sketch .edge-arrow-muted{fill:rgba(23,19,13,.34)}.theme-sketch .edge-label-bg{fill:rgba(251,243,223,.92)}.animation-none .edge-base{stroke-dasharray:none}@keyframes flowclip-dash{to{stroke-dashoffset:-84}}@keyframes flowclip-draw{0%{stroke-dashoffset:1000;opacity:.28}12%{opacity:1}58%,78%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:1000;opacity:.28}}
 `;
 
 export function downloadDataUrl(dataUrl: string, filename: string) {
@@ -101,10 +101,10 @@ export function drawFlowFrame(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasE
   }));
   const placedById = new Map(placed.map((node) => [node.id, node]));
   const colors = theme === 'dark'
-    ? { bg: '#080b13', title: '#f8fafc', sub: '#93a4bc', node: '#0f172a', nodeStroke: '#64748b', text: '#f8fafc', base: 'rgba(148,163,184,.28)', edge: '#60a5fa' }
+    ? { bg: '#080b13', title: '#f8fafc', sub: '#93a4bc', node: '#0f172a', nodeStroke: '#64748b', text: '#f8fafc', base: 'rgba(148,163,184,.28)', edge: '#60a5fa', labelBg: 'rgba(8,11,19,.9)', labelText: '#dbeafe' }
     : theme === 'sketch'
-      ? { bg: '#fbf3df', title: '#17130d', sub: '#756d62', node: '#fffaf1', nodeStroke: '#17130d', text: '#17130d', base: 'rgba(23,19,13,.18)', edge: '#17130d' }
-      : { bg: '#fffaf1', title: '#17130d', sub: '#756d62', node: '#ffffff', nodeStroke: '#d5cab9', text: '#17130d', base: 'rgba(23,19,13,.16)', edge: '#315f9f' };
+      ? { bg: '#fbf3df', title: '#17130d', sub: '#756d62', node: '#fffaf1', nodeStroke: '#17130d', text: '#17130d', base: 'rgba(23,19,13,.18)', edge: '#17130d', labelBg: 'rgba(251,243,223,.92)', labelText: '#17130d' }
+      : { bg: '#fffaf1', title: '#17130d', sub: '#756d62', node: '#ffffff', nodeStroke: '#d5cab9', text: '#17130d', base: 'rgba(23,19,13,.16)', edge: '#315f9f', labelBg: 'rgba(255,250,241,.9)', labelText: '#5f564c' };
 
   const drawArrow = (x: number, y: number, angle: number, color = colors.edge) => {
     const size = 15;
@@ -183,6 +183,23 @@ export function drawFlowFrame(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasE
     ctx.setLineDash([]);
 
     drawArrow(end.x, end.y, curve.angle, animation === 'none' ? colors.base : colors.edge);
+
+    const labelText = edge.label?.trim();
+    if (labelText) {
+      const labelX = (start.x + end.x) / 2;
+      const labelY = (start.y + end.y) / 2 - 18;
+      const labelWidth = Math.max(84, labelText.length * 13 + 38);
+      const labelHeight = 38;
+      ctx.save();
+      ctx.fillStyle = colors.labelBg;
+      ctx.fillRect(labelX - labelWidth / 2, labelY - labelHeight + 8, labelWidth, labelHeight);
+      ctx.fillStyle = colors.labelText;
+      ctx.font = '900 24px Inter, system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(labelText, labelX, labelY);
+      ctx.restore();
+    }
   });
 
   placed.forEach((node) => {
